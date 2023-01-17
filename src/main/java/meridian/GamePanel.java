@@ -5,11 +5,11 @@
 package meridian;
 
 import javax.swing.JPanel;
-import java.awt.Dimension;
-import java.awt.Color;
+import java.awt.*;
 
 
 // Screen settings.
+
 public class GamePanel extends JPanel implements Runnable {
 
    // Defining 16x16 pixels size tile.
@@ -27,7 +27,20 @@ public class GamePanel extends JPanel implements Runnable {
    static final int SCREEN_WIDTH = TILE_SIZE * MAX_SCREEN_COL;
    static final int SCREEN_HEIGHT = TILE_SIZE * MAX_SCREEN_ROW;
 
-    Thread gameThread;
+   // FPS - Screen frame per second.
+   static final int FPS = 60;
+   static final long DRAW_INTERVAL = 1000000000 / FPS;
+
+   // Handle keypressing.
+   KeyHandler keyHandler = new KeyHandler();
+
+   // Game thread.
+   Thread gameThread;
+
+   // Player default position.
+   private int playerPosX = 100;
+   private int playerPosY = 100;
+   private final int playerMovementSpeed = SCALE;
 
 
    // Constructor.
@@ -35,11 +48,15 @@ public class GamePanel extends JPanel implements Runnable {
       this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
       this.setBackground(Color.black);
       this.setDoubleBuffered(true);
+      this.addKeyListener(this.keyHandler);
+      this.setFocusable(true);
 
    }
 
 
-   // Methods.
+   /**
+    * ---- Methods ----
+    */
 
    public void startGameThread() {
       this.gameThread = new Thread(this);
@@ -49,9 +66,72 @@ public class GamePanel extends JPanel implements Runnable {
 
    @Override
    public void run() {
+      long nextDrawTime = System.nanoTime() + DRAW_INTERVAL;
+
+      // Screen drawing cycle (loop)
       while(this.gameThread != null) {
-         System.out.println("This game is running!");
+         this.update();
+         this.repaint();
+
+         // Calculate remaining time in milliseconds.
+         long timeToNextScreenReDraw = (nextDrawTime - System.nanoTime()) / 1000000;
+
+         // Waiting for next drawing time.
+         try {
+            if (timeToNextScreenReDraw > 0) {
+               Thread.sleep(timeToNextScreenReDraw);
+            }
+         } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+
+         }
+
+         // Calculate end of the next drawing cycle.
+         nextDrawTime = nextDrawTime + DRAW_INTERVAL;
       }
+
+   }
+
+   public void update() {
+
+      // Update player's horizontal position.
+      if (keyHandler.isLeftPressed()) {
+         playerPosX -= playerMovementSpeed;
+         if (playerPosX < 0) {
+            playerPosX = 0;
+         }
+      }
+      else if (keyHandler.isRightPressed()) {
+         playerPosX += playerMovementSpeed;
+         if (playerPosX > SCREEN_WIDTH - TILE_SIZE) {
+            playerPosX = SCREEN_WIDTH - TILE_SIZE;
+         }
+      }
+
+
+      // Update player's vertical position.
+      if (keyHandler.isUpPressed()) {
+         playerPosY -= playerMovementSpeed;
+         if (playerPosY < 0) {
+            playerPosY = 0;
+         }
+      }
+      else if (keyHandler.isDownPressed()) {
+         playerPosY += playerMovementSpeed;
+         if (playerPosY > SCREEN_HEIGHT - TILE_SIZE) {
+            playerPosY = SCREEN_HEIGHT - TILE_SIZE;
+         }
+      }
+
+   }
+
+   public void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      Graphics2D g2 = (Graphics2D) g;
+
+      g2.setColor(Color.white);
+      g2.fillRect(playerPosX, playerPosY, TILE_SIZE, TILE_SIZE);
+      g2.dispose();
 
    }
 
