@@ -2,7 +2,7 @@
  * @author Meridian
  * @since  2023.
  */
-package meridian;
+package meridian.main;
 
 import javax.swing.*;
 

@@ -2,34 +2,35 @@
  * @author Meridian
  * @since  2023.
  */
-package meridian;
+package meridian.main;
+
+import meridian.entity.Player;
 
 import javax.swing.JPanel;
 import java.awt.*;
 
 
 // Screen settings.
-
 public class GamePanel extends JPanel implements Runnable {
 
    // Defining 16x16 pixels size tile.
-   static final int ORIGINAL_TILE_SIZE = 16;
+   public static final int ORIGINAL_TILE_SIZE = 16;
 
    // Pixel size multiplier.
-   static final int SCALE = 3;
+   public static final int SCALE = 3;
 
    // Increasing the tile size with multiplier (48x48 pixels tile).
-   static final int TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE;
+   public static final int TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE;
 
    // Define the screen size (768x576 pixels).
-   static final int MAX_SCREEN_COL = 16;
-   static final int MAX_SCREEN_ROW = 12;
-   static final int SCREEN_WIDTH = TILE_SIZE * MAX_SCREEN_COL;
-   static final int SCREEN_HEIGHT = TILE_SIZE * MAX_SCREEN_ROW;
+   public static final int MAX_SCREEN_COL = 16;
+   public static final int MAX_SCREEN_ROW = 12;
+   public static final int SCREEN_WIDTH = TILE_SIZE * MAX_SCREEN_COL;
+   public static final int SCREEN_HEIGHT = TILE_SIZE * MAX_SCREEN_ROW;
 
    // FPS - Screen frame per second.
-   static final int FPS = 60;
-   static final long DRAW_INTERVAL = 1000000000 / FPS;
+   public static final int FPS = 60;
+   public static final long DRAW_INTERVAL = 1000000000 / FPS;
 
    // Handle keypressing.
    KeyHandler keyHandler = new KeyHandler();
@@ -37,10 +38,8 @@ public class GamePanel extends JPanel implements Runnable {
    // Game thread.
    Thread gameThread;
 
-   // Player default position.
-   private int playerPosX = 100;
-   private int playerPosY = 100;
-   private final int playerMovementSpeed = SCALE;
+   // Add a Player.
+   Player player = new Player(this, keyHandler);
 
 
    // Constructor.
@@ -94,43 +93,17 @@ public class GamePanel extends JPanel implements Runnable {
 
    public void update() {
 
-      // Update player's horizontal position.
-      if (keyHandler.isLeftPressed()) {
-         playerPosX -= playerMovementSpeed;
-         if (playerPosX < 0) {
-            playerPosX = 0;
-         }
-      }
-      else if (keyHandler.isRightPressed()) {
-         playerPosX += playerMovementSpeed;
-         if (playerPosX > SCREEN_WIDTH - TILE_SIZE) {
-            playerPosX = SCREEN_WIDTH - TILE_SIZE;
-         }
-      }
-
-
-      // Update player's vertical position.
-      if (keyHandler.isUpPressed()) {
-         playerPosY -= playerMovementSpeed;
-         if (playerPosY < 0) {
-            playerPosY = 0;
-         }
-      }
-      else if (keyHandler.isDownPressed()) {
-         playerPosY += playerMovementSpeed;
-         if (playerPosY > SCREEN_HEIGHT - TILE_SIZE) {
-            playerPosY = SCREEN_HEIGHT - TILE_SIZE;
-         }
-      }
+      player.update();
 
    }
 
+   @Override
    public void paintComponent(Graphics g) {
       super.paintComponent(g);
       Graphics2D g2 = (Graphics2D) g;
 
-      g2.setColor(Color.white);
-      g2.fillRect(playerPosX, playerPosY, TILE_SIZE, TILE_SIZE);
+      player.draw(g2);
+
       g2.dispose();
 
    }

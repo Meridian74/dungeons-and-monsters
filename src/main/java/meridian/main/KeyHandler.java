@@ -2,7 +2,7 @@
  * @author Meridian
  * @since  2023.
  */
-package meridian;
+package meridian.main;
 
 import lombok.Getter;
 import java.awt.event.KeyEvent;
@@ -20,8 +20,7 @@ public class KeyHandler implements KeyListener {
 
    @Override
    public void keyTyped(KeyEvent e) {
-
-
+      // implementing later
    }
 
    @Override
