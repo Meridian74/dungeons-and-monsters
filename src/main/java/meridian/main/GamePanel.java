@@ -58,8 +58,8 @@ public class GamePanel extends JPanel implements Runnable {
     */
 
    public void startGameThread() {
-      this.gameThread = new Thread(this);
-      this.gameThread.start();
+      gameThread = new Thread(this);
+      gameThread.start();
 
    }
 
@@ -68,9 +68,9 @@ public class GamePanel extends JPanel implements Runnable {
       long nextDrawTime = System.nanoTime() + DRAW_INTERVAL;
 
       // Screen drawing cycle (loop)
-      while(this.gameThread != null) {
-         this.update();
-         this.repaint();
+      while(gameThread != null) {
+         update();
+         repaint();
 
          // Calculate remaining time in milliseconds.
          long timeToNextScreenReDraw = (nextDrawTime - System.nanoTime()) / 1000000;

@@ -48,7 +48,7 @@ public class Player extends Entity {
       try {
          // get tile set image from file
          BufferedImage tileSet = ImageIO.read(getClass().getResourceAsStream("/players/player-set-börg.png"));
-         super.setImages(new BufferedImage[8][]);
+         setImages(new BufferedImage[8][]);
 
          // get images of the normal movement phases - each row contains 5 (size: 16x16px) pics
          for (int row = 0; row < 4; row++) {
@@ -63,7 +63,7 @@ public class Player extends Entity {
                );
 
             }
-            super.getImages()[row] = pics;
+            getImages()[row] = pics;
 
          }
          // get images of attack movement phases - each row contains 6 (size: 16x16px) images
@@ -78,7 +78,7 @@ public class Player extends Entity {
                );
 
             }
-            super.getImages()[row] = pics;
+            getImages()[row] = pics;
 
          }
          
@@ -94,39 +94,41 @@ public class Player extends Entity {
       // Update player's horizontal position.
       if (keyH.isLeftPressed()) {
 
+         setDirection(Direction.LEFT);
+
          // Turn ON active movement direction
-         this.activeMoveRight = false;
-         this.activeMoveLeft = true;
+         activeMoveRight = false;
+         activeMoveLeft = true;
 
          setPosX(getPosX() - getSpeed());
          if (getPosX() < AREA_LEFT_EDGE) {
             setPosX(AREA_LEFT_EDGE);
 
             // Turn OFF active movement direction
-            this.activeMoveLeft = false;
+            activeMoveLeft = false;
          }
 
       }
       else if (keyH.isRightPressed()) {
 
          // Turn ON active movement direction
-         this.activeMoveLeft = false;
-         this.activeMoveRight = true;
+         activeMoveLeft = false;
+         activeMoveRight = true;
 
          setPosX(getPosX() + getSpeed());
          if (getPosX() > AREA_RIGHT_EDGE) {
             setPosX(AREA_RIGHT_EDGE);
 
             // Turn OFF active movement direction
-            this.activeMoveRight = false;
+            activeMoveRight = false;
          }
 
       }
 
       // If reached a TILE edge, turn OFF movement
       if (getPosX() % GamePanel.TILE_SIZE == 0) {
-         this.activeMoveLeft = false;
-         this.activeMoveRight = false;
+         activeMoveLeft = false;
+         activeMoveRight = false;
       }
 
       // Doing continous horizontal movement by tile size accurating.
@@ -136,7 +138,7 @@ public class Player extends Entity {
          // Include fitting of the X coordinate to the Tile's grid with pixel's SCALE.
          if (getPosX() % GamePanel.TILE_SIZE < GamePanel.SCALE) {
             setPosX(getPosX() - getPosX() % GamePanel.SCALE);
-            this.activeMoveLeft = false;
+            activeMoveLeft = false;
          }
          else {
             setPosX(getPosX() - getSpeed());
@@ -148,7 +150,7 @@ public class Player extends Entity {
          // Include fitting of the X coordinate to the Tile's grid with pixel's SCALE.
          if (getPosX() % GamePanel.TILE_SIZE < GamePanel.SCALE) {
             setPosX(getPosX() + GamePanel.SCALE - getPosX() % GamePanel.TILE_SIZE);
-            this.activeMoveRight = false;
+            activeMoveRight = false;
          }
          else {
             setPosX(getPosX() + getSpeed());
@@ -161,38 +163,38 @@ public class Player extends Entity {
       if (keyH.isUpPressed()) {
 
          // Turn ON active movement direction
-         this.activeMoveDown = false;
-         this.activeMoveUp = true;
+         activeMoveDown = false;
+         activeMoveUp = true;
 
          setPosY(getPosY() - getSpeed());
          if (getPosY() < AREA_UP_EDGE) {
             setPosY(AREA_UP_EDGE);
 
             // Turn OFF active movement direction
-            this.activeMoveUp = false;
+            activeMoveUp = false;
          }
 
       }
       else if (keyH.isDownPressed()) {
 
          // Turn ON active movement direction
-         this.activeMoveUp = false;
-         this.activeMoveDown = true;
+         activeMoveUp = false;
+         activeMoveDown = true;
 
          setPosY(getPosY() + getSpeed());
          if (getPosY() > AREA_DOWN_EDGE) {
             setPosY(AREA_DOWN_EDGE);
 
             // Turn OFF active movement direction
-            this.activeMoveDown = false;
+            activeMoveDown = false;
          }
 
       }
 
       // If reached a TILE edge, turn OFF movement
       if (getPosY() % GamePanel.TILE_SIZE == 0) {
-         this.activeMoveUp = false;
-         this.activeMoveDown = false;
+         activeMoveUp = false;
+         activeMoveDown = false;
       }
 
       // Doing continous vertical movement by tile size accurating.
@@ -202,7 +204,7 @@ public class Player extends Entity {
          // Include fitting of the Y coordinate to the Tile's grid with pixel's SCALE.
          if (getPosY() % GamePanel.TILE_SIZE < GamePanel.SCALE) {
             setPosY(getPosY() - getPosY() % GamePanel.SCALE);
-            this.activeMoveUp = false;
+            activeMoveUp = false;
          }
          else {
             setPosY(getPosY() - getSpeed());
@@ -214,7 +216,7 @@ public class Player extends Entity {
          // Include fitting of the Y coordinate to the Tile's grid with pixel's SCALE.
          if (getPosY() % GamePanel.TILE_SIZE < GamePanel.SCALE) {
             setPosY(getPosY() + GamePanel.SCALE - getPosY() % GamePanel.TILE_SIZE);
-            this.activeMoveDown = false;
+            activeMoveDown = false;
          }
          else {
             setPosY(getPosY() + getSpeed());
