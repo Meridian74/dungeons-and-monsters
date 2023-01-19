@@ -22,6 +22,15 @@ public class Entity {
    private BufferedImage[][] images;
 
    // state of the movement direction
-   private String direction;
+   private Direction direction;
+
+   // which pictures from current row
+   private int animationIndex;
+
+   // variables movement types row index offset (for example: normal move (0) and attack move (4))
+   private int animationRowOffset;
+
+   // screen frame counter
+   private int screenFrameCounter;
 
 }

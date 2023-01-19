@@ -23,6 +23,9 @@ public class Player extends Entity {
    private static final int AREA_RIGHT_EDGE = GamePanel.SCREEN_WIDTH - GamePanel.TILE_SIZE;
    private static final int AREA_DOWN_EDGE = GamePanel.SCREEN_HEIGHT - GamePanel.TILE_SIZE;
 
+   // controlling the animation speed
+   private static final int ANIM_SPEED = 10;
+
    private final GamePanel gp;
    private final KeyHandler keyH;
 
@@ -87,80 +90,19 @@ public class Player extends Entity {
          throw new RuntimeException(e);
       }
 
+      setDirection(Direction.DOWN);
+      setAnimationIndex(0);
+      setScreenFrameCounter(0);
+      setAnimationRowOffset(0);
+
    }
 
    public void update() {
 
-      // Update player's horizontal position.
-      if (keyH.isLeftPressed()) {
-
-         setDirection(Direction.LEFT);
-
-         // Turn ON active movement direction
-         activeMoveRight = false;
-         activeMoveLeft = true;
-
-         setPosX(getPosX() - getSpeed());
-         if (getPosX() < AREA_LEFT_EDGE) {
-            setPosX(AREA_LEFT_EDGE);
-
-            // Turn OFF active movement direction
-            activeMoveLeft = false;
-         }
-
-      }
-      else if (keyH.isRightPressed()) {
-
-         // Turn ON active movement direction
-         activeMoveLeft = false;
-         activeMoveRight = true;
-
-         setPosX(getPosX() + getSpeed());
-         if (getPosX() > AREA_RIGHT_EDGE) {
-            setPosX(AREA_RIGHT_EDGE);
-
-            // Turn OFF active movement direction
-            activeMoveRight = false;
-         }
-
-      }
-
-      // If reached a TILE edge, turn OFF movement
-      if (getPosX() % GamePanel.TILE_SIZE == 0) {
-         activeMoveLeft = false;
-         activeMoveRight = false;
-      }
-
-      // Doing continous horizontal movement by tile size accurating.
-      if (!keyH.isLeftPressed() && this.activeMoveLeft &&
-            getPosX() % GamePanel.TILE_SIZE != 0) {
-
-         // Include fitting of the X coordinate to the Tile's grid with pixel's SCALE.
-         if (getPosX() % GamePanel.TILE_SIZE < GamePanel.SCALE) {
-            setPosX(getPosX() - getPosX() % GamePanel.SCALE);
-            activeMoveLeft = false;
-         }
-         else {
-            setPosX(getPosX() - getSpeed());
-         }
-      }
-      else if (!keyH.isRightPressed() && this.activeMoveRight &&
-            getPosX() % GamePanel.TILE_SIZE != 0) {
-
-         // Include fitting of the X coordinate to the Tile's grid with pixel's SCALE.
-         if (getPosX() % GamePanel.TILE_SIZE < GamePanel.SCALE) {
-            setPosX(getPosX() + GamePanel.SCALE - getPosX() % GamePanel.TILE_SIZE);
-            activeMoveRight = false;
-         }
-         else {
-            setPosX(getPosX() + getSpeed());
-         }
-
-      }
-
-
       // Update player's vertical position.
       if (keyH.isUpPressed()) {
+
+         setDirection(Direction.UP);
 
          // Turn ON active movement direction
          activeMoveDown = false;
@@ -177,6 +119,8 @@ public class Player extends Entity {
       }
       else if (keyH.isDownPressed()) {
 
+         setDirection(Direction.DOWN);
+
          // Turn ON active movement direction
          activeMoveUp = false;
          activeMoveDown = true;
@@ -192,7 +136,8 @@ public class Player extends Entity {
       }
 
       // If reached a TILE edge, turn OFF movement
-      if (getPosY() % GamePanel.TILE_SIZE == 0) {
+      if ((!keyH.isUpPressed() || !keyH.isDownPressed()) &&
+            getPosY() % GamePanel.TILE_SIZE == 0) {
          activeMoveUp = false;
          activeMoveDown = false;
       }
@@ -224,11 +169,135 @@ public class Player extends Entity {
 
       }
 
+
+      // Update player's horizontal position.
+      if (keyH.isLeftPressed()) {
+
+         setDirection(Direction.LEFT);
+
+         // Turn ON active movement direction
+         activeMoveRight = false;
+         activeMoveLeft = true;
+
+         setPosX(getPosX() - getSpeed());
+         if (getPosX() < AREA_LEFT_EDGE) {
+            setPosX(AREA_LEFT_EDGE);
+
+            // Turn OFF active movement direction
+            activeMoveLeft = false;
+         }
+
+      }
+      else if (keyH.isRightPressed()) {
+
+         setDirection(Direction.RIGHT);
+
+         // Turn ON active movement direction
+         activeMoveLeft = false;
+         activeMoveRight = true;
+
+         setPosX(getPosX() + getSpeed());
+         if (getPosX() > AREA_RIGHT_EDGE) {
+            setPosX(AREA_RIGHT_EDGE);
+
+            // Turn OFF active movement direction
+            activeMoveRight = false;
+         }
+
+      }
+
+      // If reached a TILE edge, turn OFF movement
+      if ((!keyH.isLeftPressed() || !keyH.isRightPressed()) &&
+            getPosX() % GamePanel.TILE_SIZE == 0) {
+         activeMoveLeft = false;
+         activeMoveRight = false;
+      }
+
+      // Doing continous horizontal movement by tile size accurating.
+      if (!keyH.isLeftPressed() && this.activeMoveLeft &&
+            getPosX() % GamePanel.TILE_SIZE != 0) {
+
+         // Include fitting of the X coordinate to the Tile's grid with pixel's SCALE.
+         if (getPosX() % GamePanel.TILE_SIZE < GamePanel.SCALE) {
+            setPosX(getPosX() - getPosX() % GamePanel.SCALE);
+            activeMoveLeft = false;
+         }
+         else {
+            setPosX(getPosX() - getSpeed());
+         }
+      }
+      else if (!keyH.isRightPressed() && this.activeMoveRight &&
+            getPosX() % GamePanel.TILE_SIZE != 0) {
+
+         // Include fitting of the X coordinate to the Tile's grid with pixel's SCALE.
+         if (getPosX() % GamePanel.TILE_SIZE < GamePanel.SCALE) {
+            setPosX(getPosX() + GamePanel.SCALE - getPosX() % GamePanel.TILE_SIZE);
+            activeMoveRight = false;
+         }
+         else {
+            setPosX(getPosX() + getSpeed());
+         }
+
+      }
+
    }
 
    public void draw(Graphics2D g2) {
-      g2.setColor(Color.white);
-      g2.fillRect(getPosX(), getPosY(), GamePanel.TILE_SIZE, GamePanel.TILE_SIZE);
+
+      BufferedImage image = null;
+      int currentAnimRowLength = 0;
+      int animIndex = getAnimationIndex();
+      int rowOffSet = getAnimationRowOffset();
+      int frameCounter = getScreenFrameCounter();
+
+      switch (getDirection()) {
+         case DOWN -> {
+            image = getImages()[rowOffSet][animIndex];
+            currentAnimRowLength = getImages()[rowOffSet].length;
+         }
+         case UP -> {
+            image = getImages()[rowOffSet + 1][animIndex];
+            currentAnimRowLength = getImages()[rowOffSet].length;
+         }
+         case LEFT -> {
+            image = getImages()[rowOffSet + 2][animIndex];
+            currentAnimRowLength = getImages()[rowOffSet].length;
+         }
+         case RIGHT -> {
+            image = getImages()[rowOffSet + 3][animIndex];
+            currentAnimRowLength = getImages()[rowOffSet].length;
+         }
+
+      }
+
+
+      // show Player's character
+      g2.drawImage(image, getPosX(), getPosY(), GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
+
+
+      // control of animation phase changes -- 60 fps screen is too fast for anim speed
+      frameCounter++;
+      if (frameCounter > ANIM_SPEED) {
+
+         // step next frame of animation row if moving is active
+         if (activeMoveLeft || activeMoveRight || activeMoveUp || activeMoveDown) {
+            setAnimationIndex(getAnimationIndex() + 1);
+            if (getAnimationIndex() > currentAnimRowLength - 1) {
+
+               // because the first frame of animation row is a standing state
+               setAnimationIndex(1);
+            }
+         }
+         else {
+            setAnimationIndex(0);
+            // optional part... if the Player stopped, the character turns to face you
+            setDirection(Direction.DOWN);
+         }
+
+         frameCounter = 0;
+      }
+
+      setScreenFrameCounter(frameCounter);
 
    }
 
