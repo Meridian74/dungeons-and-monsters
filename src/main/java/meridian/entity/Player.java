@@ -8,7 +8,10 @@ import lombok.Getter;
 import meridian.main.GamePanel;
 import meridian.main.KeyHandler;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 
 @Getter
@@ -33,14 +36,56 @@ public class Player extends Entity {
    public Player(GamePanel gp, KeyHandler keyH) {
       this.gp = gp;
       this.keyH = keyH;
-      this.setDefaultValues();
+      this.init();
    }
 
 
-   public void setDefaultValues() {
+   public void init() {
       setPosX(100);
       setPosY(100);
       setSpeed(GamePanel.SCALE);
+
+      try {
+         // get tile set image from file
+         BufferedImage tileSet = ImageIO.read(getClass().getResourceAsStream("/players/player-set-börg.png"));
+         super.setImages(new BufferedImage[8][]);
+
+         // get images of the normal movement phases - each row contains 5 (size: 16x16px) pics
+         for (int row = 0; row < 4; row++) {
+
+            BufferedImage[] pics = new BufferedImage[5];
+
+            for (int current = 0; current < 5; current++) {
+               pics[current] = tileSet.getSubimage(
+                     GamePanel.ORIGINAL_TILE_SIZE * current,
+                     GamePanel.ORIGINAL_TILE_SIZE * row,
+                     GamePanel.ORIGINAL_TILE_SIZE, GamePanel.ORIGINAL_TILE_SIZE
+               );
+
+            }
+            super.getImages()[row] = pics;
+
+         }
+         // get images of attack movement phases - each row contains 6 (size: 16x16px) images
+         for (int row = 4; row < 8; row++) {
+
+            BufferedImage[] pics = new BufferedImage[6];
+            for (int current = 0; current < 6; current++) {
+               pics[current] = tileSet.getSubimage(
+                     GamePanel.ORIGINAL_TILE_SIZE * current,
+                     GamePanel.ORIGINAL_TILE_SIZE * row,
+                     GamePanel.ORIGINAL_TILE_SIZE, GamePanel.ORIGINAL_TILE_SIZE
+               );
+
+            }
+            super.getImages()[row] = pics;
+
+         }
+         
+      }
+      catch (IOException e) {
+         throw new RuntimeException(e);
+      }
 
    }
 
@@ -110,7 +155,6 @@ public class Player extends Entity {
          }
 
       }
-
 
 
       // Update player's vertical position.
