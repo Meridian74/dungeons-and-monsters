@@ -71,22 +71,24 @@ public class TileManager {
    }
 
    public void draw(Graphics2D g2) {
+      int y = 0;
       for (int row = 0; row < GamePanel.MAX_SCREEN_ROW; row++) {
+         int x = 0;
          for (int col = 0; col < GamePanel.MAX_SCREEN_COL; col++) {
             int tileIndex = mapTileIDs[row][col];
             Tile tile = tiles[tileIndex];
 
             g2.drawImage(
                   tile.getImage(),
-                  col * GamePanel.TILE_SIZE,
-                  row * GamePanel.TILE_SIZE,
+                  x, y,
                   tile.getImage().getWidth() * GamePanel.SCALE,
                   tile.getImage().getHeight() * GamePanel.SCALE,
                   null
             );
+            x += GamePanel.TILE_SIZE;
 
          }
-
+         y += GamePanel.TILE_SIZE;
       }
 
    }
