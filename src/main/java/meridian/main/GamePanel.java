@@ -85,8 +85,10 @@ public class GamePanel extends JPanel implements Runnable {
                Thread.sleep(timeToNextScreenReDraw);
             }
          } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-
+            System.err.println("Programm runnig interrupted: " + e);
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
+            System.exit(-1);
          }
 
          // Calculate end of the next drawing cycle.
