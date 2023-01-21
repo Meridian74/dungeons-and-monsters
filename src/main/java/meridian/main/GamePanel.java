@@ -5,6 +5,7 @@
 package meridian.main;
 
 import meridian.entity.Player;
+import meridian.tile.TileManager;
 
 import javax.swing.JPanel;
 import java.awt.*;
@@ -37,6 +38,9 @@ public class GamePanel extends JPanel implements Runnable {
 
    // Game thread.
    Thread gameThread;
+
+   // Tile Manager
+   TileManager tileManager = new TileManager(this);
 
    // Add a Player.
    Player player = new Player(this, keyHandler);
@@ -102,6 +106,7 @@ public class GamePanel extends JPanel implements Runnable {
       super.paintComponent(g);
       Graphics2D g2 = (Graphics2D) g;
 
+      tileManager.draw(g2);
       player.draw(g2);
 
       g2.dispose();
