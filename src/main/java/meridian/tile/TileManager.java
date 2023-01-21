@@ -10,8 +10,11 @@ import meridian.main.GamePanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -21,42 +24,72 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 
-
 public class TileManager {
 
+   private static final String DUNGEON_SET_01_JSON_CONFIG = "/tiles/dungeon_basic_set_01.json";
    private static final String DUNGEON_SET_01_FILE = "/tiles/dungeon_basic_set_01.png";
-   private static final String DUNGEON_SET_01_JSON_CONFIG = "file:src/main/resources/tiles/dungeon_basic_set_01.json";
+   private static final String DUNGEON_TEST_MAP = "/maps/test_map.map";
 
    private GamePanel gp;
    private Tile[] tiles;
+
+   private int[][] mapTileIDs = new int[GamePanel.MAX_SCREEN_ROW][GamePanel.MAX_SCREEN_COL];
 
 
    public TileManager(GamePanel gp) {
       this.gp = gp;
       this.tiles = loadTileImages();
+      this.loadMapData();
    }
 
+   public void loadMapData() {
+      try (InputStream inputStream = getClass().getResourceAsStream(DUNGEON_TEST_MAP);
+           InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+           BufferedReader reader = new BufferedReader(streamReader)) {
 
-   public void draw(Graphics2D g2) {
-      int x = 0;
-      int y = 0;
-      for (Tile tile : tiles) {
-         g2.drawImage(
-               tile.getImage(),
-               x, y,
-               tile.getImage().getWidth() * GamePanel.SCALE,
-               tile.getImage().getHeight() * GamePanel.SCALE,
-               null
-         );
-         x = x + tile.getImage().getWidth() * GamePanel.SCALE;
-         if (x >= GamePanel.SCREEN_WIDTH) {
-            x = 0;
-            y = y + tile.getImage().getHeight() * GamePanel.SCALE;
+         int row = 0;
+         String line;
+         while ((line = reader.readLine()) != null) {
+
+            String[] numbers = line.split(" ");
+
+            int col = 0;
+            while (col < GamePanel.MAX_SCREEN_COL) {
+               int num = Integer.parseInt(numbers[col]);
+
+               mapTileIDs[row][col] = num;
+               col++;
+            }
+
+            row++;
          }
+
+      } catch (NumberFormatException | IOException ioe) {
+         throw new IllegalStateException("Can not read file", ioe);
       }
 
    }
 
+   public void draw(Graphics2D g2) {
+      for (int row = 0; row < GamePanel.MAX_SCREEN_ROW; row++) {
+         for (int col = 0; col < GamePanel.MAX_SCREEN_COL; col++) {
+            int tileIndex = mapTileIDs[row][col];
+            Tile tile = tiles[tileIndex];
+
+            g2.drawImage(
+                  tile.getImage(),
+                  col * GamePanel.TILE_SIZE,
+                  row * GamePanel.TILE_SIZE,
+                  tile.getImage().getWidth() * GamePanel.SCALE,
+                  tile.getImage().getHeight() * GamePanel.SCALE,
+                  null
+            );
+
+         }
+
+      }
+
+   }
 
    private Tile[] loadTileImages() {
       List<TileConfig> tileConfigs = getTileConfigsFromJSON();
@@ -92,16 +125,26 @@ public class TileManager {
 
    private List<TileConfig> getTileConfigsFromJSON() {
       List<TileConfig> result = Collections.emptyList();
-      try {
-         URL file = new URL(DUNGEON_SET_01_JSON_CONFIG);
+      try (InputStream inputStream = getClass().getResourceAsStream(DUNGEON_SET_01_JSON_CONFIG);
+           InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+           BufferedReader reader = new BufferedReader(streamReader)) {
+
+         StringBuilder sb = new StringBuilder();
+
+         String line;
+         while ((line = reader.readLine()) != null) {
+            sb.append(line);
+         }
+
+         String json = sb.toString();
          ObjectMapper objectMapper = new ObjectMapper();
-         result = objectMapper.readValue(file, new TypeReference<>() {
-         });
+         result = objectMapper.readValue(json, new TypeReference<>(){});
       }
       catch (IOException e) {
          System.err.println("Can not read dungeon's tile config file: " + e);
          System.exit(-1);
       }
+
       return result;
    }
 
