@@ -177,7 +177,7 @@
     "ysize": 16,
     "collision": false,
     "transparency": 1.0,
-    "description": "Wall: external top-right corner - '└─'"
+    "description": "Wall: inside top-right corner - '└─'"
   },
   {
     "id": 18,
@@ -298,5 +298,56 @@
     "collision": false,
     "transparency": 0.0,
     "description": "Floor: with dirty - bottom-left"
+  },
+  {
+    "id": 30,
+    "x": 7,
+    "y": 7,
+    "xsize": 16,
+    "ysize": 16,
+    "collision": true,
+    "transparency": 1.0,
+    "description": "Wall: inner right side '|'"
+  },
+  {
+    "id": 31,
+    "x": 8,
+    "y": 7,
+    "xsize": 16,
+    "ysize": 16,
+    "collision": true,
+    "transparency": 1.0,
+    "description": "Wall: inner left side '|'"
+  },
+  {
+    "id": 32,
+    "x": 2,
+    "y": 2,
+    "xsize": 16,
+    "ysize": 16,
+    "collision": true,
+    "transparency": 1.0,
+    "description": "Wall: external bottom-right edge '┘'"
+  },
+  {
+    "id": 33,
+    "x": 2,
+    "y": 3,
+    "xsize": 16,
+    "ysize": 16,
+    "collision": true,
+    "transparency": 1.0,
+    "description": "Wall: external bottom-left edge '└'"
+  },
+  {
+    "id": 34,
+    "x": 2,
+    "y": 1,
+    "xsize": 16,
+    "ysize": 16,
+    "collision": true,
+    "transparency": 1.0,
+    "description": "Wall: upper fog for horizontal middle wall"
   }
+
 ]

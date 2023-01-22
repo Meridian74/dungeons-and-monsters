@@ -76,6 +76,13 @@ public class TileManager {
          int x = 0;
          for (int col = 0; col < GamePanel.MAX_SCREEN_COL; col++) {
             int tileIndex = mapTileIDs[row][col];
+
+            // void place - jump over.
+            if (tileIndex == 9999) {
+               x += GamePanel.TILE_SIZE;
+               continue;
+            }
+
             Tile tile = tiles[tileIndex];
 
             g2.drawImage(
