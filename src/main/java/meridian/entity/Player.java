@@ -87,7 +87,7 @@ public class Player extends Entity {
          
       }
       catch (IOException e) {
-         throw new RuntimeException(e);
+         throw new IllegalStateException("Cannot load player' graphics" + e);
       }
 
       setDirection(Direction.DOWN);

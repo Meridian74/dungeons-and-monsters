@@ -127,8 +127,7 @@ public class TileManager {
             result[index] = tile;
          }
       } catch (IOException | RasterFormatException e) {
-         System.err.println("Can not read data of the dungeon's tile pictures! " + e);
-         System.exit(-1);
+         throw new IllegalStateException("Can not read dungeon's tile config file: " + e);
       }
 
       return result;
@@ -154,8 +153,7 @@ public class TileManager {
          }
       }
       catch (IOException e) {
-         System.err.println("Can not read dungeon's tile config file: " + e);
-         System.exit(-1);
+         throw new IllegalStateException("Can not read dungeon's tile config file: " + e);
       }
 
       return result;
