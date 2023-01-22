@@ -39,31 +39,33 @@ public class TileManager {
    public TileManager(GamePanel gp) {
       this.gp = gp;
       this.tiles = loadTileImages();
-      this.loadMapData();
+      this.loadMapData(DUNGEON_TEST_MAP);
    }
 
-   public void loadMapData() {
-      try (InputStream inputStream = getClass().getResourceAsStream(DUNGEON_TEST_MAP);
-           InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-           BufferedReader reader = new BufferedReader(streamReader)) {
+   public void loadMapData(String filePath) {
+      try (InputStream inputStream = getClass().getResourceAsStream(filePath)) {
+         assert inputStream != null;
+         try (InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+              BufferedReader reader = new BufferedReader(streamReader)) {
 
-         int row = 0;
-         String line;
-         while ((line = reader.readLine()) != null) {
+            int row = 0;
+            String line;
+            while ((line = reader.readLine()) != null) {
 
-            String[] numbers = line.split(" ");
+               String[] numbers = line.split(" ");
 
-            int col = 0;
-            while (col < GamePanel.MAX_SCREEN_COL) {
-               int num = Integer.parseInt(numbers[col]);
+               int col = 0;
+               while (col < GamePanel.MAX_SCREEN_COL) {
+                  int num = Integer.parseInt(numbers[col]);
 
-               mapTileIDs[row][col] = num;
-               col++;
+                  mapTileIDs[row][col] = num;
+                  col++;
+               }
+
+               row++;
             }
 
-            row++;
          }
-
       } catch (NumberFormatException | IOException ioe) {
          throw new IllegalStateException("Can not read file", ioe);
       }
@@ -134,20 +136,22 @@ public class TileManager {
 
    private List<TileConfig> getTileConfigsFromJSON() {
       List<TileConfig> result = Collections.emptyList();
-      try (InputStream inputStream = getClass().getResourceAsStream(DUNGEON_SET_01_JSON_CONFIG);
-           InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-           BufferedReader reader = new BufferedReader(streamReader)) {
+      try (InputStream inputStream = getClass().getResourceAsStream(DUNGEON_SET_01_JSON_CONFIG)) {
+         assert inputStream != null;
+         try (InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+              BufferedReader reader = new BufferedReader(streamReader)) {
 
-         StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
-         String line;
-         while ((line = reader.readLine()) != null) {
-            sb.append(line);
+            String line;
+            while ((line = reader.readLine()) != null) {
+               sb.append(line);
+            }
+
+            String json = sb.toString();
+            ObjectMapper objectMapper = new ObjectMapper();
+            result = objectMapper.readValue(json, new TypeReference<>(){});
          }
-
-         String json = sb.toString();
-         ObjectMapper objectMapper = new ObjectMapper();
-         result = objectMapper.readValue(json, new TypeReference<>(){});
       }
       catch (IOException e) {
          System.err.println("Can not read dungeon's tile config file: " + e);
