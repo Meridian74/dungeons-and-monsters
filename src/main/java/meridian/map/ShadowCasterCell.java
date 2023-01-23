@@ -8,13 +8,13 @@ import java.util.List;
 
 @Setter
 @Getter
-public class VisibilityBlockerCell {
+public class ShadowCasterCell {
 
    private int x;
    private int y;
-   private List<Modifier> modifiedCells = new ArrayList<>();
+   private List<CellDarkener> modifiedCells = new ArrayList<>();
 
-   public VisibilityBlockerCell(int x, int y) {
+   public ShadowCasterCell(int x, int y) {
       this.x = x;
       this.y = y;
    }
