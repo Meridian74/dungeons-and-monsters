@@ -13,7 +13,8 @@ import java.util.List;
 public class VisibleMatrix {
 
    // Arrays of x, y coords
-   public static final int[][] OBJECT_SURROUND = {
+   private final int[][] objectSurroundCoords = {
+
          // first circle
          {1, 0}, {1, 1},
          {0, 1},
@@ -48,56 +49,27 @@ public class VisibleMatrix {
    private void initData() {
       this.preCalculatedData = new ArrayList<>();
 
-      for (int[] coords : OBJECT_SURROUND) {
+      for (int[] coords : objectSurroundCoords) {
          int xx = coords[0];
          int yy = coords[1];
-         VisibilityBlockerCell vbc = new VisibilityBlockerCell(xx, yy);
          double deltaY1 = yy - 0.5 / xx;
          double deltaY2 = yy + 0.5 / xx;
+         VisibilityBlockerCell vbc = new VisibilityBlockerCell(xx, yy);
 
+         // Check map cells.
          for (int row = 0; row < 8; row++) {
             for (int col = row; col < 10; col++) {
-               // continue if it's centrum cell
-               if (row == 0 && col == 0) {
-                  continue;
-               }
-               // Continue if it's the visibility bokcker cell
-               if (row == yy && col == xx) {
-                  continue;
-               }
-               // continue if cell is situated left from object
-               if (xx < col) {
-                  continue;
-               }
 
-               // cell inline the viewer
-               if (deltaY1 < 0) {
-                  vbc.getModifiedCells().add(new Modifier(col, row, 1.0));
+               // Fully visible cells.
+               if (fullyVisibleCells(xx, yy, row, col))
                   continue;
-               }
 
-               double lineY1 = col * deltaY1;
-               double lineY2 = col * deltaY2;
-               if(lineY1 < row - 0.5 && lineY2 > row + 0.5) {
-                  vbc.getModifiedCells().add(new Modifier(col, row, 1.0));
+               // Inline the viewer cells.
+               if (cellInlineInCamera(vbc, deltaY1, row, col))
                   continue;
-               }
-               double portion = 1.0;
-               boolean modified = false;
-               if (lineY1 > row - 0.5 && lineY1 < row + 0.5) {
-                  portion = portion - (lineY1 - (row - 0.5));
-                  modified = true;
-               }
-               if (lineY2 < row + 0.5 && lineY2 > row - 0.5) {
-                  portion = portion - (row + 0.5) - lineY2);
-                  modified = true;
-               }
-               if (modified) {
-                  vbc.getModifiedCells().add(new Modifier(col, row, portion));
-               }
 
+               addShadedCell(vbc, deltaY1, deltaY2, row, col);
             }
-
          }
 
          // TODO: mirroring data all square
@@ -105,4 +77,64 @@ public class VisibleMatrix {
       }
 
    }
+
+   private static boolean fullyVisibleCells(int xx, int yy, int row, int col) {
+      boolean result;
+      // This is the camera cell.
+      if (row == 0 && col == 0) {
+         result = true;
+      }
+      // This is the shadow cell.
+      else if (row == yy && col == xx) {
+         result = true;
+      }
+      // Cell is not situated in the direction of the shadow
+      else if (xx < col) {
+         result = true;
+      }
+      else {
+         result = false;
+      }
+      return result;
+   }
+
+   private static boolean cellInlineInCamera(VisibilityBlockerCell vbc, double deltaY1, int row, int col) {
+      if (deltaY1 < 0) {
+         vbc.getModifiedCells().add(new Modifier(col, row, 1.0));
+         return true;
+      }
+      return false;
+   }
+
+
+
+   private static void addShadedCell(VisibilityBlockerCell vbc, double deltaY1, double deltaY2, int row, int col) {
+      // Upper shadow line.
+      double lineY1 = col * deltaY1;
+      // Bottom shadow line.
+      double lineY2 = col * deltaY2;
+
+      // Fully shaded cell.
+      if(lineY1 < row - 0.5 && lineY2 > row + 0.5) {
+         vbc.getModifiedCells().add(new Modifier(col, row, 1.0));
+         return;
+      }
+
+      // Partially shaded cell.
+      double portion = 1.0;
+      boolean portionIsModified = false;
+      if (lineY1 > row - 0.5 && lineY1 < row + 0.5) {
+         portion = portion - (lineY1 - (row - 0.5));
+         portionIsModified = true;
+      }
+      if (lineY2 < row + 0.5 && lineY2 > row - 0.5) {
+         portion = portion - ((row + 0.5) - lineY2);
+         portionIsModified = true;
+      }
+      if (portionIsModified) {
+         vbc.getModifiedCells().add(new Modifier(col, row, portion));
+      }
+
+   }
+
 }
