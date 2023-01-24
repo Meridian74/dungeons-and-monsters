@@ -9,13 +9,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CellDarkener {
+public class DarkenedCell {
 
    private int x;
    private int y;
    private double value;
 
-   public CellDarkener(int x, int y, double value) {
+   public DarkenedCell(int x, int y, double value) {
       this.x = x;
       this.y = y;
       this.value = value;

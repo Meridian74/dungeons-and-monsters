@@ -17,12 +17,10 @@ U
 +src/main/java/meridian/tile/TileConfig.java,2\f\2fca25da256dcc6913b60b7c3f3ec65c12426b22
 U
 %src/main/java/meridian/tile/Tile.java,1\6\16039efa5830ea2b55a282f3e953b6862af067a1
-X
-(src/main/java/meridian/map/Modifier.java,c\7\c77552a8763dea4b35164aa899b0009207bd6201
-e
-5src/main/java/meridian/map/VisibilityBlockerCell.java,3\b\3babee4bd6328a6bbcac89ba88ae0d1b62867f13
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
 Z
 *src/main/java/meridian/main/GamePanel.java,c\b\cb8ec82590be2e6b9f87bc6a8988af896680675a
+7
+pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec

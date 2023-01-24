@@ -45,40 +45,63 @@ public class ShadeMatrix {
    };
 
    // PreCalculated cell visibility modifiers data
-   private final List<ShadowCasterCell> preCalculatedData;
+   private final List<ShadowCastingPosition> preCalculatedData = null;
 
-   public ShadeMatrix() {
-      this.preCalculatedData = initData(this.objectSurroundCoords);
-   }
 
-   public List<ShadowCasterCell> initData(int[][] coords) {
-      List<ShadowCasterCell> result = new ArrayList<>();
+   public List<ShadowCastingPosition> initData(int[][] coords) {
+      List<ShadowCastingPosition> result = new ArrayList<>();
 
       for (int[] xyCoordinate : coords) {
          int xx = xyCoordinate[0];
          int yy = xyCoordinate[1];
          double deltaY1 = (yy - 0.5) / xx;
          double deltaY2 = (yy + 0.5) / xx;
-         ShadowCasterCell vbc = new ShadowCasterCell(xx, yy);
+         ShadowCastingPosition castingPosition = new ShadowCastingPosition(xx, yy);
 
-         // Check map cells.
+         // Search shaded map cells - in XY triangle.
          for (int row = 0; row <= HEIGHT; row++) {
             for (int col = row; col <= WIDTH; col++) {
                // Fully visible cells.
                if (isFullyVisibleCells(xx, yy, col, row))
                   continue;
 
-               addShadedCell(vbc, deltaY1, deltaY2, col, row);
+               findShadedCell(castingPosition, deltaY1, deltaY2, col, row);
             }
          }
-         result.add(vbc);
 
-         // TODO: mirroring data all square
+         // update XX/YY diagonal
+         if (xx == yy) {
+            List<DarkenedCell> additionalDarkeners = mirrorDarkenersOnXY(castingPosition, 0);
+            // Update list.
+            castingPosition.getDarkenedCells().addAll(additionalDarkeners);
+         }
+
+         // Save position with shaded cell list into result.
+         result.add(castingPosition);
+
+         // Copy and add mirrored position's result
+         if (xx != yy) {
+            // Save mirrored new position with shaded cell list into result.
+            ShadowCastingPosition mirroredXYPosition = new ShadowCastingPosition(yy, xx);
+            List<DarkenedCell> mirroredDarkeners = mirrorDarkenersOnXY(castingPosition, 1);
+            mirroredXYPosition.getDarkenedCells().addAll(mirroredDarkeners);
+
+            result.add(mirroredXYPosition);
+         }
 
       }
 
+      // Extend result with HORIZONTALLY mirrored positions.
+      List<ShadowCastingPosition> mirroredX = copyAndMirrorHorizontally(result);
+      result.addAll(mirroredX);
+
+      // Extend result with VERTICALLY mirrored positions.
+      List<ShadowCastingPosition> mirroredY = copyAndMirrorVertically(result);
+      result.addAll(mirroredY);
+
       return result;
    }
+
 
    private static boolean isFullyVisibleCells(int xx, int yy, int col, int row) {
       boolean result;
@@ -100,7 +123,7 @@ public class ShadeMatrix {
       return result;
    }
 
-   private static void addShadedCell(ShadowCasterCell vbc, double deltaY1, double deltaY2, int col, int row) {
+   private static void findShadedCell(ShadowCastingPosition vbc, double deltaY1, double deltaY2, int col, int row) {
       // Upper line of light ray.
       double lightY1 = (row - 0.5);
       // Bottom line of light ray.
@@ -113,7 +136,8 @@ public class ShadeMatrix {
 
       // Fully shaded cell.
       if(lightY1 >= shadowY1 && lightY2 <= shadowY2) {
-         vbc.getModifiedCells().add(new CellDarkener(col, row, 1.0));
+         vbc.getDarkenedCells().add(new DarkenedCell(col, row, 1.0));
+
          return;
       }
 
@@ -129,9 +153,84 @@ public class ShadeMatrix {
          portionIsModified = true;
       }
       if (portionIsModified) {
-         vbc.getModifiedCells().add(new CellDarkener(col, row, portion));
+         vbc.getDarkenedCells().add(new DarkenedCell(col, row, portion));
+
       }
 
+   }
+
+   /**
+    * @param casterCell data that need to mirror
+    * @param offset 0: diagonal, 1: non-diagonal mirroring
+    * @return
+    */
+   private static List<DarkenedCell> mirrorDarkenersOnXY(ShadowCastingPosition casterCell, int offset) {
+      List<DarkenedCell> darkeners = casterCell.getDarkenedCells();
+      List<DarkenedCell> additionalDarkeners = new ArrayList<>();
+      for (DarkenedCell cd : darkeners) {
+         int x = cd.getX();
+         int y = cd.getY();
+         if (x != y && x < HEIGHT + offset) { // Because the screen wider than tall
+
+            // FYI: Swap x and y!
+            DarkenedCell newCd = new DarkenedCell(y, x, cd.getValue());
+
+            additionalDarkeners.add(newCd);
+         }
+      }
+      return additionalDarkeners;
+   }
+
+   private static List<ShadowCastingPosition> copyAndMirrorVertically(List<ShadowCastingPosition> result) {
+      // copy and mirror result VERTICALLY and add to result
+      List<ShadowCastingPosition> additionalResult = new ArrayList<>();
+      for (ShadowCastingPosition scp : result) {
+
+         // Except data in the horizontal mirroring angle!
+         if (scp.getY() != 0) {
+            ShadowCastingPosition mirroredSCP = new ShadowCastingPosition(scp.getX(), -(scp.getY())); // mirrored Y position
+            List<DarkenedCell> darkeners = scp.getDarkenedCells();
+            for (DarkenedCell darkenedCell : darkeners) {
+               int x = darkenedCell.getX();
+               int y = darkenedCell.getY();
+               DarkenedCell mirroredDC = new DarkenedCell(x, -y, darkenedCell.getValue());
+
+               mirroredSCP.getDarkenedCells().add(mirroredDC);
+            }
+
+            additionalResult.add(mirroredSCP);
+         }
+
+      }
+
+      return additionalResult;
+   }
+
+   private static List<ShadowCastingPosition> copyAndMirrorHorizontally(List<ShadowCastingPosition> originalResult) {
+      // copy and mirror result HORIZONTALLY and add to result
+      List<ShadowCastingPosition> additionalResult = new ArrayList<>();
+      for (ShadowCastingPosition scp : originalResult) {
+
+         // Except data in the vertical mirroring angle!
+         if (scp.getX() != 0) {
+            // Create new with mirrored X position
+            ShadowCastingPosition mirroredSCP = new ShadowCastingPosition(-(scp.getX()), scp.getY());
+
+            List<DarkenedCell> darkeners = scp.getDarkenedCells();
+            for (DarkenedCell darkenedCell : darkeners) {
+               int x = darkenedCell.getX();
+               int y = darkenedCell.getY();
+               DarkenedCell mirroredDC = new DarkenedCell(-x, y, darkenedCell.getValue());
+
+               mirroredSCP.getDarkenedCells().add(mirroredDC);
+            }
+
+            additionalResult.add(mirroredSCP);
+         }
+
+      }
+
+      return additionalResult;
    }
 
 }

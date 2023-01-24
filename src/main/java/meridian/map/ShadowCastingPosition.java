@@ -8,13 +8,13 @@ import java.util.List;
 
 @Setter
 @Getter
-public class ShadowCasterCell {
+public class ShadowCastingPosition {
 
    private int x;
    private int y;
-   private List<CellDarkener> modifiedCells = new ArrayList<>();
+   private List<DarkenedCell> darkenedCells = new ArrayList<>();
 
-   public ShadowCasterCell(int x, int y) {
+   public ShadowCastingPosition(int x, int y) {
       this.x = x;
       this.y = y;
    }

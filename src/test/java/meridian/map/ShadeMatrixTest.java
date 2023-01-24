@@ -14,16 +14,24 @@ class ShadeMatrixTest {
    @Test
    void visibleMatrixInitData() {
       ShadeMatrix vm = new ShadeMatrix();
-      int[][] coords = {{2, 1}};
-      List<ShadowCasterCell> preCalculatedData = vm.initData(coords);
-      List<CellDarkener> modifiedCells = preCalculatedData.get(0).getModifiedCells();
+      int[][] coords = { {3, 1} };
+      List<ShadowCastingPosition> preCalculatedData = vm.initData(coords);
+      List<DarkenedCell> modifiedCells = preCalculatedData.get(0).getDarkenedCells();
 
-      assertEquals(27, modifiedCells.size());
 //      System.out.println("size: " + modifiedCells.size());
-//      for (CellDarkener m : modifiedCells) {
+//      for (DarkenedCell m : modifiedCells) {
 //         System.out.println("x: " + m.getX() + ", y: " + m.getY() + ", value: " + m.getValue());
 //      }
 
+      assertEquals(17, modifiedCells.size());
+   }
+
+   @Test
+   void visibleMatrixInitAllData() {
+      ShadeMatrix vm = new ShadeMatrix();
+      List<ShadowCastingPosition> preCalculatedData = vm.initData(vm.getObjectSurroundCoords());
+
+      assertEquals(416, preCalculatedData.size());
    }
 
 }
