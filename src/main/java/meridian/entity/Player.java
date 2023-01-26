@@ -23,6 +23,10 @@ public class Player extends Entity {
    private static final int AREA_RIGHT_EDGE = GamePanel.SCREEN_WIDTH - GamePanel.TILE_SIZE;
    private static final int AREA_DOWN_EDGE = GamePanel.SCREEN_HEIGHT - GamePanel.TILE_SIZE;
 
+   // Player pictures location on the displayed screen
+   private static final int DRAWING_POSITION_X = GamePanel.SCREEN_WIDTH / 2 - GamePanel.TILE_SIZE / 2;
+   private static final int DRAWING_POSITION_Y = GamePanel.SCREEN_HEIGHT / 2 - GamePanel.TILE_SIZE / 2;
+
    // controlling the animation speed
    private static final int ANIM_SPEED = 10;
 
@@ -45,10 +49,6 @@ public class Player extends Entity {
 
 
    public void init() {
-      setPosX(100);
-      setPosY(100);
-
-
       try {
          // get tile set image from file
          BufferedImage tileSet = ImageIO.read(getClass().getResourceAsStream("/players/player-set-börg.png"));
@@ -273,7 +273,8 @@ public class Player extends Entity {
 
 
       // show Player's character
-      g2.drawImage(image, getPosX(), getPosY(), GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
+      g2.drawImage(image, DRAWING_POSITION_X, DRAWING_POSITION_Y,
+            GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
 
 
       // control of animation phase changes -- 60 fps screen is too fast for anim speed

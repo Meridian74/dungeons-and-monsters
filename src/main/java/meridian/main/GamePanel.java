@@ -35,19 +35,19 @@ public class GamePanel extends JPanel implements Runnable {
    public static final long DRAW_INTERVAL = 1000000000 / FPS;
 
    // Handle keypressing.
-   KeyHandler keyHandler = new KeyHandler();
+   private KeyHandler keyHandler = new KeyHandler();
+
+   // Map Manager;
+   private MapManager mapManager = new MapManager();
+
+   // Tile Manager
+   private TileManager tileManager = new TileManager();
+
+   // Add a Player.
+   private Player player = new Player(this, keyHandler);
 
    // Game thread.
    Thread gameThread;
-
-   // Map Manager;
-   MapManager mapManager = new MapManager();
-
-   // Tile Manager
-   TileManager tileManager = new TileManager();
-
-   // Add a Player.
-   Player player = new Player(this, keyHandler);
 
 
    // Constructor.
@@ -63,8 +63,8 @@ public class GamePanel extends JPanel implements Runnable {
       this.mapManager.loadMapById(1);
       this.tileManager.loadTileImages("/tiles/" + mapManager.getCurrentTileSet());
       // place player on the WORLD map
-      this.player.setPosX(10);
-      this.player.setPosX(10);
+      this.player.setPosX(10 * TILE_SIZE);
+      this.player.setPosX(10 * TILE_SIZE);
 
    }
 
@@ -85,6 +85,7 @@ public class GamePanel extends JPanel implements Runnable {
 
       // Screen drawing cycle (loop)
       while(gameThread != null) {
+
 
          // player update
          update();
@@ -107,10 +108,6 @@ public class GamePanel extends JPanel implements Runnable {
          // Calculate end of the next drawing cycle.
          nextDrawTime = nextDrawTime + DRAW_INTERVAL;
       }
-
-   }
-
-   public void menu() {
 
    }
 
