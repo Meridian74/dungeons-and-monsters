@@ -5,7 +5,7 @@
 package meridian.tile;
 
 
-import meridian.main.GamePanel;
+import meridian.main.GameParam;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
@@ -55,8 +55,8 @@ public class TileManager {
             tile.setBlockFieldOfVision(tf.getTransparency());
 
             BufferedImage tileImage = image.getSubimage(
-                  GamePanel.ORIGINAL_TILE_SIZE * tf.getX(),
-                  GamePanel.ORIGINAL_TILE_SIZE * tf.getY(),
+                  GameParam.ORIGINAL_TILE_SIZE * tf.getX(),
+                  GameParam.ORIGINAL_TILE_SIZE * tf.getY(),
                   tf.getSizeX(), tf.getSizeY()
             );
             tile.setImage(tileImage);

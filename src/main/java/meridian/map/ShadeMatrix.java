@@ -4,7 +4,8 @@
  */
 package meridian.map;
 
-import meridian.main.GamePanel;
+
+import meridian.main.GameParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,8 @@ import lombok.Getter;
 @Getter
 public class ShadeMatrix {
 
-   static final int WIDTH = GamePanel.MAX_SCREEN_COL / 2;
-   static final int HEIGHT = GamePanel.MAX_SCREEN_ROW / 2;
+   static final int WIDTH = GameParam.MAX_SCREEN_COL / 2;
+   static final int HEIGHT = GameParam.MAX_SCREEN_ROW / 2;
 
    // Arrays of x, y coords
    private final int[][] objectSurroundCoords = {
