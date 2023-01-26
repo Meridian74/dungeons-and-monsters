@@ -14,8 +14,14 @@ import java.awt.image.BufferedImage;
 @Setter
 public class Entity {
 
-   private int posX;
-   private int posY;
+   // Position on the world map in pixels.
+   private int worldPosX;
+   private int worldPosY;
+
+   // Position on the world map by tilesize.
+   private int worldCol;
+   private int worldRow;
+
 
    // Movement speed in pixels.
    private int speed;
