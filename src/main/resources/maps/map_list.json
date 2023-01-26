@@ -1,0 +1,16 @@
+[
+  {
+    "id": 0,
+    "mapFileName": "test_map",
+    "tileSetName": "dungeon_basic_set_01",
+    "sizeX": 19,
+    "sizeY": 15
+  },
+  {
+    "id": 1,
+    "mapFileName": "test_map2",
+    "tileSetName": "dungeon_basic_set_01",
+    "sizeX": 38,
+    "sizeY": 45
+  }
+]

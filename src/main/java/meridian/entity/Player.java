@@ -39,6 +39,7 @@ public class Player extends Entity {
    public Player(GamePanel gp, KeyHandler keyH) {
       this.gp = gp;
       this.keyH = keyH;
+      setSpeed(GamePanel.SCALE);
       this.init();
    }
 
@@ -46,7 +47,7 @@ public class Player extends Entity {
    public void init() {
       setPosX(100);
       setPosY(100);
-      setSpeed(GamePanel.SCALE);
+
 
       try {
          // get tile set image from file
@@ -91,8 +92,8 @@ public class Player extends Entity {
       }
 
       setDirection(Direction.DOWN);
-      setAnimationIndex(0);
-      setScreenFrameCounter(0);
+      setAnimationPhaseIndex(0);
+      setCurrentDrawedFrame(0);
       setAnimationRowOffset(0);
 
    }
@@ -246,25 +247,25 @@ public class Player extends Entity {
 
       BufferedImage image = null;
       int currentAnimRowLength = 0;
-      int animIndex = getAnimationIndex();
+      int animPhaseIndex = getAnimationPhaseIndex();
       int rowOffSet = getAnimationRowOffset();
-      int frameCounter = getScreenFrameCounter();
+      int drawedFrame = getCurrentDrawedFrame();
 
       switch (getDirection()) {
          case DOWN -> {
-            image = getImages()[rowOffSet][animIndex];
+            image = getImages()[rowOffSet][animPhaseIndex];
             currentAnimRowLength = getImages()[rowOffSet].length;
          }
          case UP -> {
-            image = getImages()[rowOffSet + 1][animIndex];
+            image = getImages()[rowOffSet + 1][animPhaseIndex];
             currentAnimRowLength = getImages()[rowOffSet].length;
          }
          case LEFT -> {
-            image = getImages()[rowOffSet + 2][animIndex];
+            image = getImages()[rowOffSet + 2][animPhaseIndex];
             currentAnimRowLength = getImages()[rowOffSet].length;
          }
          case RIGHT -> {
-            image = getImages()[rowOffSet + 3][animIndex];
+            image = getImages()[rowOffSet + 3][animPhaseIndex];
             currentAnimRowLength = getImages()[rowOffSet].length;
          }
 
@@ -276,28 +277,28 @@ public class Player extends Entity {
 
 
       // control of animation phase changes -- 60 fps screen is too fast for anim speed
-      frameCounter++;
-      if (frameCounter > ANIM_SPEED) {
+      drawedFrame++;
+      if (drawedFrame > ANIM_SPEED) {
 
          // step next frame of animation row if moving is active
          if (activeMoveLeft || activeMoveRight || activeMoveUp || activeMoveDown) {
-            setAnimationIndex(getAnimationIndex() + 1);
-            if (getAnimationIndex() > currentAnimRowLength - 1) {
+            setAnimationPhaseIndex(getAnimationPhaseIndex() + 1);
+            if (getAnimationPhaseIndex() > currentAnimRowLength - 1) {
 
                // because the first frame of animation row is a standing state
-               setAnimationIndex(1);
+               setAnimationPhaseIndex(1);
             }
          }
          else {
-            setAnimationIndex(0);
+            setAnimationPhaseIndex(0);
             // optional part... if the Player stopped, the character turns to face you
             setDirection(Direction.DOWN);
          }
 
-         frameCounter = 0;
+         drawedFrame = 0;
       }
 
-      setScreenFrameCounter(frameCounter);
+      setCurrentDrawedFrame(drawedFrame);
 
    }
 

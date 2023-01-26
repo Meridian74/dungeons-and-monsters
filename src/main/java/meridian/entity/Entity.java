@@ -16,21 +16,23 @@ public class Entity {
 
    private int posX;
    private int posY;
+
+   // Movement speed in pixels.
    private int speed;
 
-   // storing all pictures of the animation phases
+   // Storing all pictures of the animation phases
    private BufferedImage[][] images;
 
-   // state of the movement direction
+   // State of the movement direction
    private Direction direction;
 
-   // which pictures from current row
-   private int animationIndex;
+   // Which pictures from current row
+   private int animationPhaseIndex;
 
-   // variables movement types row index offset (for example: normal move (0) and attack move (4))
+   // Variables movement types row index offset (for example: normal move (0) and attack move (4))
    private int animationRowOffset;
 
-   // screen frame counter
-   private int screenFrameCounter;
+   // Screen frame counter
+   private int currentDrawedFrame;
 
 }

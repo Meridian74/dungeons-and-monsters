@@ -1,3 +1,7 @@
+/**
+ * @author Meridian
+ * @since  2023.
+ */
 package meridian.map;
 
 import lombok.Getter;
