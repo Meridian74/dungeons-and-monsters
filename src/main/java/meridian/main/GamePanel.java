@@ -85,6 +85,8 @@ public class GamePanel extends JPanel implements Runnable {
 
       // Screen drawing cycle (loop)
       while(gameThread != null) {
+
+         // player update
          update();
          repaint();
 
@@ -123,8 +125,15 @@ public class GamePanel extends JPanel implements Runnable {
       super.paintComponent(g);
       Graphics2D g2 = (Graphics2D) g;
 
-//      tileManager.draw(g2);
+      // TODO: get cell on the screen by Player position - doing this the MapManager
+      // TODO: draw screen floor and wall
+      // TODO: draw items
+      // TODO: draw monsters
+
+      // draw player
       player.draw(g2);
+
+      // TODO: draw secondary walls&decorations (door, torch, others...)
 
       g2.dispose();
 
