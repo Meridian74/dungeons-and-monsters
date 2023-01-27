@@ -18,11 +18,11 @@ public class GamePanel extends JPanel implements Runnable {
    // Handle key pressing.
    private KeyHandler keyHandler = new KeyHandler();
 
-   // World Map graphics.
-   private MapManager mapManager = new MapManager();
-
    // Tile graphics.
    private TileManager tileManager = new TileManager();
+
+   // World Map graphics.
+   private MapManager mapManager = new MapManager(this.tileManager);
 
    // Add a Player.
    private Player player = new Player(keyHandler, mapManager);

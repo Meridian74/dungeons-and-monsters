@@ -9,6 +9,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import meridian.main.GameParam;
+import meridian.tile.Tile;
+import meridian.tile.TileManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,6 +26,8 @@ public class MapManager {
 
    private static final String MAP_LIST_FILE = "/maps/map_list.json";
 
+   private final TileManager tileManager;
+
    private int currentMapId;
    private String currentTileSet;
    private int mapWidth;
@@ -37,9 +41,11 @@ public class MapManager {
    // list of loadable maps data
    List<Map> maps;
 
+   // Storing all information of World Map in MapCells
    MapCell[][] cells;
 
-   public MapManager() {
+   public MapManager(TileManager tm) {
+      this.tileManager = tm;
       this.maps = this.init();
    }
 
@@ -77,10 +83,16 @@ public class MapManager {
             this.currentTileSet = map.getTileSetName();
             this.mapWidth = map.getSizeX();
             this.mapHeight = map.getSizeY();
+
+            // create new Map Cells array by row/col.
+            this.cells = new MapCell[map.getSizeY()][map.getSizeX()];
+
+            // define World Map edges
             this.worldLeft = 0;
             this.worldTop = 0;
             this.worldRight = this.mapWidth * GameParam.TILE_SIZE;
             this.worldBottom = this.mapHeight * GameParam.TILE_SIZE;
+
             break;
          }
       }
@@ -88,8 +100,41 @@ public class MapManager {
 
 
    public void loadMapData(String mapName) {
-      System.out.println("Should load map data (MapCells) here... coming soon!");
-      System.out.println("Map name: " + mapName);
+      try (InputStream inputStream = getClass().getResourceAsStream(mapName + ".map")) {
+         assert inputStream != null;
+         try (InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+              BufferedReader reader = new BufferedReader(streamReader)) {
+
+            int row = 0;
+            String line;
+            while ((line = reader.readLine()) != null) {
+
+               String[] currentRowData = line.split(" ");
+
+               int currentCol = 0;
+               while (currentCol < currentRowData.length && currentCol < cells[0].length) {
+
+                  int tileIndex = Integer.parseInt(currentRowData[currentCol]);
+                  Tile tile = tileManager.getTileByIndex(tileIndex);
+
+                  MapCell cell = new MapCell();
+                  cell.setTile(tile);
+                  cell.setCurrentOpacity(1.0 - tile.getBlockFieldOfVision());
+
+                  cells[row][currentCol] = cell;
+
+                  currentCol++;
+               }
+
+               row++;
+            }
+
+         }
+
+      }
+      catch (IOException e) {
+         throw new IllegalStateException("Cannot initialize World Map Cells from file: " + e);
+      }
 
    }
 

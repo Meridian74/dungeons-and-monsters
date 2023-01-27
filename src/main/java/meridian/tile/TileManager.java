@@ -4,7 +4,6 @@
  */
 package meridian.tile;
 
-
 import meridian.main.GameParam;
 
 import java.awt.image.BufferedImage;
@@ -21,28 +20,14 @@ import javax.imageio.ImageIO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
-
 public class TileManager {
 
-//   private static final String DUNGEON_SET_01_JSON_CONFIG = "/tiles/dungeon_basic_set_01.json";
-   private static final String DUNGEON_SET_01_FILE = "/tiles/dungeon_basic_set_01.png";
-//   private static final String DUNGEON_TEST_MAP = "/maps/test_map.map";
-
-//   private GamePanel gp;
    private Tile[] tiles;
 
-//   private int[][] mapTileIDs = new int[GamePanel.MAX_SCREEN_ROW][GamePanel.MAX_SCREEN_COL];
 
-
-   public TileManager() {
-//      this.tiles = loadTileImages();
-//      this.gp = gp;
-//      this.loadMapData(DUNGEON_TEST_MAP);
-   }
-
-   public Tile[] loadTileImages(String fileName) {
+   public void loadTileImages(String fileName) {
       List<TileConfig> tileConfigs = getTileConfigsFromJSON(fileName + ".json");
-      Tile[] result = new Tile[tileConfigs.size()];
+      this.tiles = new Tile[tileConfigs.size()];
 
       BufferedImage image;
       try {
@@ -60,15 +45,22 @@ public class TileManager {
                   tf.getSizeX(), tf.getSizeY()
             );
             tile.setImage(tileImage);
-
             int index = tile.getId();
-            result[index] = tile;
+
+            this.tiles[index] = tile;
          }
       } catch (IOException | RasterFormatException e) {
          throw new IllegalStateException("Can not read dungeon's tile config file: " + e);
       }
 
-      return result;
+   }
+
+   public Tile getTileByIndex(int index) {
+      if (index >= 0 && index < tiles.length) {
+         return tiles[index];
+      }
+      throw new IllegalStateException(("Worng tile index data (it must be between 0 and " +
+            (tiles.length - 1) + "): " + index));
    }
 
    private List<TileConfig> getTileConfigsFromJSON(String tileConfigFileName) {

@@ -13,7 +13,7 @@ class MapManagerTest {
    @Test
    void mapConfigLoadTest() {
 
-      MapManager mm = new MapManager();
+      MapManager mm = new MapManager(null);
 
       int numOfMaps = mm.getMaps().size();
       assertEquals(2, numOfMaps);
