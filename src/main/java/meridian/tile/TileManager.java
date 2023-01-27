@@ -25,24 +25,24 @@ public class TileManager {
    private Tile[] tiles;
 
 
-   public void loadTileImages(String fileName) {
-      List<TileConfig> tileConfigs = getTileConfigsFromJSON(fileName + ".json");
+   public void loadTiles(String tilesFileName) {
+      List<TileConfig> tileConfigs = getTileConfigsFromJSON("/tiles/" + tilesFileName + ".json");
       this.tiles = new Tile[tileConfigs.size()];
 
       BufferedImage image;
       try {
-         image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(fileName + ".png")));
-         for (TileConfig tf : tileConfigs) {
+         image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/" + tilesFileName + ".png")));
+         for (TileConfig tc : tileConfigs) {
             Tile tile = new Tile();
-            tile.setId(tf.getId());
-            tile.setCollision(tf.isCollision());
-            tile.setDescription(tf.getDescription());
-            tile.setBlockFieldOfVision(tf.getTransparency());
+            tile.setId(tc.getId());
+            tile.setCollision(tc.isCollision());
+            tile.setDescription(tc.getDescription());
+            tile.setBlockFieldOfVision(tc.getTransparency());
 
             BufferedImage tileImage = image.getSubimage(
-                  GameParam.ORIGINAL_TILE_SIZE * tf.getX(),
-                  GameParam.ORIGINAL_TILE_SIZE * tf.getY(),
-                  tf.getSizeX(), tf.getSizeY()
+                  GameParam.ORIGINAL_TILE_SIZE * tc.getX(),
+                  GameParam.ORIGINAL_TILE_SIZE * tc.getY(),
+                  tc.getSizeX(), tc.getSizeY()
             );
             tile.setImage(tileImage);
             int index = tile.getId();
@@ -59,7 +59,7 @@ public class TileManager {
       if (index >= 0 && index < tiles.length) {
          return tiles[index];
       }
-      throw new IllegalStateException(("Worng tile index data (it must be between 0 and " +
+      throw new IllegalStateException(("Wrong tile index data (it must be between 0 and " +
             (tiles.length - 1) + "): " + index));
    }
 
@@ -88,66 +88,5 @@ public class TileManager {
 
       return result;
    }
-
-
-//   public void loadMapData(String filePath) {
-//      try (InputStream inputStream = getClass().getResourceAsStream(filePath)) {
-//         assert inputStream != null;
-//         try (InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-//              BufferedReader reader = new BufferedReader(streamReader)) {
-//
-//            int row = 0;
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//
-//               String[] numbers = line.split(" ");
-//
-//               int col = 0;
-//               while (col < GamePanel.MAX_SCREEN_COL) {
-//                  int num = Integer.parseInt(numbers[col]);
-//
-//                  mapTileIDs[row][col] = num;
-//                  col++;
-//               }
-//
-//               row++;
-//            }
-//
-//         }
-//      } catch (NumberFormatException | IOException ioe) {
-//         throw new IllegalStateException("Can not read file", ioe);
-//      }
-//
-//   }
-
-//   public void draw(Graphics2D g2) {
-//      int y = 0;
-//      for (int row = 0; row < GamePanel.MAX_SCREEN_ROW; row++) {
-//         int x = 0;
-//         for (int col = 0; col < GamePanel.MAX_SCREEN_COL; col++) {
-//            int tileIndex = mapTileIDs[row][col];
-//
-//            // void place - jump over.
-//            if (tileIndex == 9999) {
-//               x += GamePanel.TILE_SIZE;
-//               continue;
-//            }
-//
-//            Tile tile = tiles[tileIndex];
-//
-//            g2.drawImage(
-//                  tile.getImage(),
-//                  x, y,
-//                  tile.getImage().getWidth() * GamePanel.SCALE,
-//                  tile.getImage().getHeight() * GamePanel.SCALE,
-//                  null
-//            );
-//            x += GamePanel.TILE_SIZE;
-//
-//         }
-//         y += GamePanel.TILE_SIZE;
-//      }
-//
-//   }
 
 }

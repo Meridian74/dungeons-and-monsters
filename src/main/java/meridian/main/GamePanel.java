@@ -42,7 +42,6 @@ public class GamePanel extends JPanel implements Runnable {
 
       // basic start - without menu, load, etc
       this.mapManager.loadMapById(1);
-      this.tileManager.loadTileImages("/tiles/" + mapManager.getCurrentTileSet());
       // place player on the WORLD map
       this.player.setWorldPosX(10 * GameParam.TILE_SIZE);
       this.player.setWorldPosX(10 * GameParam.TILE_SIZE);

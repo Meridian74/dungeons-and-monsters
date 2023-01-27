@@ -25,11 +25,11 @@ public class MapManager {
 
 
    private static final String MAP_LIST_FILE = "/maps/map_list.json";
+   private static final int VOID_CELL_ID = 9999;
 
    private final TileManager tileManager;
 
    private int currentMapId;
-   private String currentTileSet;
    private int mapWidth;
    private int mapHeight;
 
@@ -78,16 +78,18 @@ public class MapManager {
    public void loadMapById(int mapId) {
       for (Map map : this.maps) {
          if (map.getId() == mapId) {
-            loadMapData("/maps/" + map.getMapFileName());
-            this.currentMapId = map.getId();
-            this.currentTileSet = map.getTileSetName();
             this.mapWidth = map.getSizeX();
             this.mapHeight = map.getSizeY();
+            this.currentMapId = map.getId();
 
-            // create new Map Cells array by row/col.
+            // Load Map Tile set images
+            this.tileManager.loadTiles(map.getTileSetName());
+
+            // Create new Map Cells array by row/col and load all map information.
             this.cells = new MapCell[map.getSizeY()][map.getSizeX()];
+            loadMapData("/maps/" + map.getMapFileName());
 
-            // define World Map edges
+            // Define World Map edges.
             this.worldLeft = 0;
             this.worldTop = 0;
             this.worldRight = this.mapWidth * GameParam.TILE_SIZE;
@@ -115,7 +117,13 @@ public class MapManager {
                while (currentCol < currentRowData.length && currentCol < cells[0].length) {
 
                   int tileIndex = Integer.parseInt(currentRowData[currentCol]);
-                  Tile tile = tileManager.getTileByIndex(tileIndex);
+                  Tile tile;
+                  if (tileIndex != VOID_CELL_ID) {
+                     tile = tileManager.getTileByIndex(tileIndex);
+                  }
+                  else { // void cell...!
+                     tile = new Tile();
+                  }
 
                   MapCell cell = new MapCell();
                   cell.setTile(tile);
