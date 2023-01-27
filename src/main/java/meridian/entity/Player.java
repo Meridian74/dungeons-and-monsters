@@ -5,9 +5,9 @@
 package meridian.entity;
 
 import lombok.Getter;
-import meridian.main.GamePanel;
 import meridian.main.GameParam;
 import meridian.main.KeyHandler;
+import meridian.map.MapManager;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -19,12 +19,6 @@ import java.util.Objects;
 @Getter
 public class Player extends Entity {
 
-   private static final int WORD_LEFT_EDGE = 0;
-   private static final int WORLD_TOP_EDGE = 0;
-
-   private static final int WORLD_RIGHT_EDGE = GameParam.SCREEN_WIDTH - GameParam.TILE_SIZE;
-   private static final int WORLD_BOTTOM_EDGE = GameParam.SCREEN_HEIGHT - GameParam.TILE_SIZE;
-
    // Player pictures location on the displayed screen
    private static final int DRAWING_POSITION_X = GameParam.SCREEN_WIDTH / 2 - GameParam.TILE_SIZE / 2;
    private static final int DRAWING_POSITION_Y = GameParam.SCREEN_HEIGHT / 2 - GameParam.TILE_SIZE / 2;
@@ -32,8 +26,8 @@ public class Player extends Entity {
    // controlling the animation speed
    private static final int ANIM_SPEED = 10;
 
-   private final GamePanel gp;
    private final KeyHandler keyH;
+   private final MapManager mapManager;
 
    private boolean activeMoveLeft;
    private boolean activeMoveRight;
@@ -42,9 +36,9 @@ public class Player extends Entity {
 
 
    // Constructor.
-   public Player(GamePanel gp, KeyHandler keyH) {
-      this.gp = gp;
-      this.keyH = keyH;
+   public Player(KeyHandler kh, MapManager mm) {
+      this.keyH = kh;
+      this.mapManager = mm;
       this.init();
    }
 
@@ -193,10 +187,10 @@ public class Player extends Entity {
          setWorldPosY(newPosition);
 
          // Checking the boundary of the World Map.
-         if (getWorldPosY() < WORLD_TOP_EDGE) {
+         if (getWorldPosY() < mapManager.getWorldTop()) {
             // Turn OFF active movement direction and roll back position.
             activeMoveUp = false;
-            setWorldPosY(WORLD_TOP_EDGE);
+            setWorldPosY(mapManager.getWorldTop());
          }
 
       }
@@ -210,10 +204,10 @@ public class Player extends Entity {
          setWorldPosY(newPosition);
 
          // Checking the boundary of the World Map.
-         if (getWorldPosY() > WORLD_BOTTOM_EDGE) {
+         if (getWorldPosY() > mapManager.getWorldBottom()) {
             // Turn OFF active movement direction and roll back position.
             activeMoveDown = false;
-            setWorldPosY(WORLD_BOTTOM_EDGE);
+            setWorldPosY(mapManager.getWorldBottom());
          }
 
       }
@@ -277,10 +271,10 @@ public class Player extends Entity {
          setWorldPosX(newPosition);
 
          // Checking the boundary of the World Map.
-         if (getWorldPosX() < WORD_LEFT_EDGE) {
+         if (getWorldPosX() < mapManager.getWorldLeft()) {
             // Turn OFF active movement direction and roll back position.
             activeMoveLeft = false;
-            setWorldPosX(WORD_LEFT_EDGE);
+            setWorldPosX(mapManager.getWorldLeft());
          }
 
       }
@@ -294,10 +288,10 @@ public class Player extends Entity {
          setWorldPosX(newPosition);
 
          // Checking the boundary of the World Map.
-         if (getWorldPosX() > WORLD_RIGHT_EDGE) {
+         if (getWorldPosX() > mapManager.getWorldRight()) {
             // Turn OFF active movement direction
             activeMoveRight = false;
-            setWorldPosX(WORLD_RIGHT_EDGE);
+            setWorldPosX(mapManager.getWorldRight());
          }
 
       }

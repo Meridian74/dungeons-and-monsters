@@ -15,20 +15,20 @@ import java.awt.*;
 // Screen settings.
 public class GamePanel extends JPanel implements Runnable {
 
-   // Handle keypressing.
+   // Handle key pressing.
    private KeyHandler keyHandler = new KeyHandler();
 
-   // Map Manager;
+   // World Map graphics.
    private MapManager mapManager = new MapManager();
 
-   // Tile Manager
+   // Tile graphics.
    private TileManager tileManager = new TileManager();
 
    // Add a Player.
-   private Player player = new Player(this, keyHandler);
+   private Player player = new Player(keyHandler, mapManager);
 
    // Game thread.
-   Thread gameThread;
+   private Thread gameThread;
 
 
    // Constructor.

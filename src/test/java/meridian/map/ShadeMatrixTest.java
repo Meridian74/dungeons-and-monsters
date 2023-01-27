@@ -13,9 +13,9 @@ class ShadeMatrixTest {
 
    @Test
    void visibleMatrixInitData() {
-      ShadeMatrix vm = new ShadeMatrix();
       int[][] coords = { {3, 1} };
-      List<ShadowCastingPosition> preCalculatedData = vm.initData(coords);
+      ShadeMatrix vm = new ShadeMatrix(coords);
+      List<ShadowCastingPosition> preCalculatedData = vm.getPreCalculatedData();
       List<DarkenedCell> modifiedCells = preCalculatedData.get(0).getDarkenedCells();
 
 //      System.out.println("size: " + modifiedCells.size());
@@ -29,7 +29,7 @@ class ShadeMatrixTest {
    @Test
    void visibleMatrixInitAllData() {
       ShadeMatrix vm = new ShadeMatrix();
-      List<ShadowCastingPosition> preCalculatedData = vm.initData(vm.getObjectSurroundCoords());
+      List<ShadowCastingPosition> preCalculatedData = vm.getPreCalculatedData();
 
       assertEquals(416, preCalculatedData.size());
    }

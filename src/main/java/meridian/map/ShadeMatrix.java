@@ -16,11 +16,11 @@ import lombok.Getter;
 @Getter
 public class ShadeMatrix {
 
-   static final int WIDTH = GameParam.MAX_SCREEN_COL / 2;
-   static final int HEIGHT = GameParam.MAX_SCREEN_ROW / 2;
+   private static final int WIDTH = GameParam.MAX_SCREEN_COL / 2;
+   private static final int HEIGHT = GameParam.MAX_SCREEN_ROW / 2;
 
    // Arrays of x, y coords
-   private final int[][] objectSurroundCoords = {
+   private static final int[][] OBJECT_SURROUND_COORDS = {
          // first circle
          {1, 0}, {1, 1},
          {0, 1},
@@ -46,10 +46,18 @@ public class ShadeMatrix {
    };
 
    // PreCalculated cell visibility modifiers data
-   private final List<ShadowCastingPosition> preCalculatedData = null;
+   private final List<ShadowCastingPosition> preCalculatedData;
+
+   public ShadeMatrix() {
+      this.preCalculatedData = initData(OBJECT_SURROUND_COORDS);
+   }
+
+   public ShadeMatrix(int[][] coords) {
+      this.preCalculatedData = initData(coords);
+   }
 
 
-   public List<ShadowCastingPosition> initData(int[][] coords) {
+   private List<ShadowCastingPosition> initData(int[][] coords) {
       List<ShadowCastingPosition> result = new ArrayList<>();
 
       for (int[] xyCoordinate : coords) {

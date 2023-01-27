@@ -8,6 +8,7 @@ package meridian.map;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import meridian.main.GameParam;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,12 +21,18 @@ import java.util.List;
 @Getter
 public class MapManager {
 
+
    private static final String MAP_LIST_FILE = "/maps/map_list.json";
 
    private int currentMapId;
    private String currentTileSet;
    private int mapWidth;
    private int mapHeight;
+
+   private int worldTop = 0;
+   private int worldLeft = 0;
+   private int worldRight = 0;
+   private int worldBottom = 0;
 
    // list of loadable maps data
    List<Map> maps;
@@ -70,6 +77,10 @@ public class MapManager {
             this.currentTileSet = map.getTileSetName();
             this.mapWidth = map.getSizeX();
             this.mapHeight = map.getSizeY();
+            this.worldLeft = 0;
+            this.worldTop = 0;
+            this.worldRight = this.mapWidth * GameParam.TILE_SIZE;
+            this.worldBottom = this.mapHeight * GameParam.TILE_SIZE;
             break;
          }
       }
@@ -79,5 +90,7 @@ public class MapManager {
    public void loadMapData(String mapName) {
       System.out.println("Should load map data (MapCells) here... coming soon!");
       System.out.println("Map name: " + mapName);
+
    }
+
 }
