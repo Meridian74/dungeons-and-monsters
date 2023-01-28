@@ -13,7 +13,7 @@ import meridian.tile.Tile;
 public class MapCell {
 
    // Tile grafix
-   Tile tile;
+   private Tile tile;
 
    double currentOpacity;
    double visibleOpacity;

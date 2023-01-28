@@ -43,8 +43,8 @@ public class GamePanel extends JPanel implements Runnable {
       // basic start - without menu, load, etc
       this.mapManager.loadMapById(1);
       // place player on the WORLD map
-      this.player.setWorldPosX(10 * GameParam.TILE_SIZE);
-      this.player.setWorldPosX(10 * GameParam.TILE_SIZE);
+      this.player.setWorldPosX(9 * GameParam.TILE_SIZE);
+      this.player.setWorldPosY(7 * GameParam.TILE_SIZE);
 
    }
 
@@ -94,6 +94,7 @@ public class GamePanel extends JPanel implements Runnable {
    public void update() {
 
       player.update();
+      mapManager.updateLights();
 
    }
 
@@ -102,15 +103,15 @@ public class GamePanel extends JPanel implements Runnable {
       super.paintComponent(g);
       Graphics2D g2 = (Graphics2D) g;
 
-      // TODO: get cell on the screen by Player position - doing this the MapManager
-      // TODO: draw screen floor and wall
+      mapManager.drawMap(g2, player);
+
       // TODO: draw items
       // TODO: draw monsters
 
       // draw player
       player.draw(g2);
 
-      // TODO: draw secondary walls&decorations (door, torch, others...)
+      // TODO: draw secondary walls & decorations (door, torch, others...)
 
       g2.dispose();
 

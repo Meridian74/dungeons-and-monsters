@@ -1,6 +1,6 @@
 /**
  * @author Meridian
- * @since  2023.
+ * @since 2023.
  */
 package meridian.entity;
 
@@ -81,9 +81,8 @@ public class Player extends Entity {
             getImages()[row] = pics;
 
          }
-         
-      }
-      catch (NullPointerException | IOException e) {
+
+      } catch (NullPointerException | IOException e) {
          throw new IllegalStateException("Cannot load player' graphics" + e);
       }
 
@@ -161,8 +160,7 @@ public class Player extends Entity {
                // because the first frame of animation row is a standing state
                setAnimationPhaseIndex(1);
             }
-         }
-         else {
+         } else {
             setAnimationPhaseIndex(0);
             // optional part... if the Player stopped, the character turns to face you
             setDirection(Direction.DOWN);
@@ -193,8 +191,7 @@ public class Player extends Entity {
             setWorldPosY(mapManager.getWorldTop());
          }
 
-      }
-      else if (keyH.isDownPressed()) {
+      } else if (keyH.isDownPressed()) {
          // Turn ON active movement direction
          activeMoveUp = false;
          activeMoveDown = true;
@@ -235,13 +232,11 @@ public class Player extends Entity {
             int newPosition = getWorldPosY() - getWorldPosY() % GameParam.SCALE;
             setWorldPosY(newPosition);
             activeMoveUp = false;
-         }
-         else {
+         } else {
             int newPosition = getWorldPosY() - getSpeed();
             setWorldPosY(newPosition);
          }
-      }
-      else if (!keyH.isDownPressed() && this.activeMoveDown &&
+      } else if (!keyH.isDownPressed() && this.activeMoveDown &&
             getWorldPosY() % GameParam.TILE_SIZE != 0) {
 
          // Include fitting of the Y coordinate to the Tile's grid with pixel's SCALE.
@@ -249,8 +244,7 @@ public class Player extends Entity {
             int newPosition = getWorldPosY() + getWorldPosY() % GameParam.SCALE;
             setWorldPosY(newPosition);
             activeMoveDown = false;
-         }
-         else {
+         } else {
             int newPosition = getWorldPosY() + getSpeed();
             setWorldPosY(newPosition);
          }
@@ -277,8 +271,7 @@ public class Player extends Entity {
             setWorldPosX(mapManager.getWorldLeft());
          }
 
-      }
-      else if (keyH.isRightPressed()) {
+      } else if (keyH.isRightPressed()) {
          // Turn ON active movement direction
          activeMoveLeft = false;
          activeMoveRight = true;
@@ -319,13 +312,11 @@ public class Player extends Entity {
             int newPosition = getWorldPosX() - getWorldPosX() % GameParam.SCALE;
             setWorldPosX(newPosition);
             activeMoveLeft = false;
-         }
-         else {
+         } else {
             int newPosition = getWorldPosX() - getSpeed();
             setWorldPosX(newPosition);
          }
-      }
-      else if (!keyH.isRightPressed() && this.activeMoveRight &&
+      } else if (!keyH.isRightPressed() && this.activeMoveRight &&
             getWorldPosX() % GameParam.TILE_SIZE != 0) {
 
          // Include fitting of the X coordinate to the Tile's grid with pixel's SCALE.
@@ -333,8 +324,7 @@ public class Player extends Entity {
             int newPosition = getWorldPosX() + GameParam.SCALE - getWorldPosX() % GameParam.TILE_SIZE;
             setWorldPosX(newPosition);
             activeMoveRight = false;
-         }
-         else {
+         } else {
             int newPosition = getWorldPosX() + getSpeed();
             setWorldPosX(newPosition);
          }
@@ -344,15 +334,10 @@ public class Player extends Entity {
    }
 
    private void calculateWorldMapTilePostion() {
-      if (getWorldPosY() % GameParam.TILE_SIZE < getSpeed()) {
-         int newPosition = getWorldPosY() / GameParam.TILE_SIZE;
-         setWorldRow(newPosition);
-      }
-      if (getWorldPosX() % GameParam.TILE_SIZE < getSpeed()) {
-         int newPosition = getWorldPosX() / GameParam.TILE_SIZE;
-         setWorldCol(newPosition);
-      }
-
+      int newYRow = getWorldPosY() / GameParam.TILE_SIZE;
+      setWorldRow(newYRow);
+      int newXCol = getWorldPosX() / GameParam.TILE_SIZE;
+      setWorldCol(newXCol);
    }
 
 }

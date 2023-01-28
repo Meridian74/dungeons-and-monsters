@@ -8,10 +8,13 @@ package meridian.map;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import meridian.entity.Player;
 import meridian.main.GameParam;
 import meridian.tile.Tile;
 import meridian.tile.TileManager;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -92,14 +95,13 @@ public class MapManager {
             // Define World Map edges.
             this.worldLeft = 0;
             this.worldTop = 0;
-            this.worldRight = this.mapWidth * GameParam.TILE_SIZE;
-            this.worldBottom = this.mapHeight * GameParam.TILE_SIZE;
+            this.worldRight = (this.mapWidth - 1) * GameParam.TILE_SIZE;
+            this.worldBottom = (this.mapHeight - 1) * GameParam.TILE_SIZE;
 
             break;
          }
       }
    }
-
 
    public void loadMapData(String mapName) {
       try (InputStream inputStream = getClass().getResourceAsStream(mapName + ".map")) {
@@ -123,6 +125,7 @@ public class MapManager {
                   }
                   else { // void cell...!
                      tile = new Tile();
+                     tile.setId(VOID_CELL_ID);
                   }
 
                   MapCell cell = new MapCell();
@@ -142,6 +145,48 @@ public class MapManager {
       }
       catch (IOException e) {
          throw new IllegalStateException("Cannot initialize World Map Cells from file: " + e);
+      }
+
+   }
+
+   public void updateLights() {
+      // TODO set: cell opacity
+   }
+
+   public void drawMap(Graphics2D g2, Player player) {
+      BufferedImage image;
+      int drawX;
+      int shiftX;
+      int drawY;
+      int shiftY;
+
+      int startRow = player.getWorldRow() - GameParam.MAX_SCREEN_ROW / 2 - 1;
+      int startCol = player.getWorldCol() - GameParam.MAX_SCREEN_COL / 2 - 1;
+      int endRow = startRow + GameParam.MAX_SCREEN_ROW + 1;
+      int endCol = startCol + GameParam.MAX_SCREEN_COL + 1;
+
+      for (int row = startRow; row <= endRow && row < cells.length; row++) {
+         if (row < 0) continue;
+         // Y shift by player vertical movement phase pixels
+         shiftY = player.getWorldPosY() % GameParam.TILE_SIZE;
+         drawY = (row - startRow - 1) * GameParam.TILE_SIZE - shiftY;
+
+         for (int col = startCol; col <= endCol && col < cells[row].length; col++) {
+            if (col < 0) continue;
+
+            Tile tile = cells[row][col].getTile();
+            if (tile.getId() != VOID_CELL_ID) {
+               // X shift by player horizontal movement phase pixels
+               shiftX = player.getWorldPosX() % GameParam.TILE_SIZE;
+               drawX = (col - startCol - 1) * GameParam.TILE_SIZE - shiftX;
+
+               // Drawing current tile.
+               image = tile.getImage();
+               g2.drawImage(image, drawX, drawY, GameParam.TILE_SIZE, GameParam.TILE_SIZE, null);
+            }
+
+         }
+
       }
 
    }
