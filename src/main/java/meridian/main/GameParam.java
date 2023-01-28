@@ -12,10 +12,10 @@ public final class GameParam {
    public static final int ORIGINAL_TILE_SIZE = 16;
 
    // Pixel size multiplier.
-   public static final int SCALE = 3;
+   public static final int PIXEL_SCALE = 3;
 
    // Increasing the tile size with multiplier (48x48 pixels tile).
-   public static final int TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE;
+   public static final int TILE_SIZE = ORIGINAL_TILE_SIZE * PIXEL_SCALE;
 
    // Define the screen size (768x576 pixels).
    public static final int MAX_SCREEN_COL = 19;

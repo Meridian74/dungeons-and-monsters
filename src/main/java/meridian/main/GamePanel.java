@@ -39,12 +39,14 @@ public class GamePanel extends JPanel implements Runnable {
       this.addKeyListener(this.keyHandler);
       this.setFocusable(true);
 
-
       // basic start - without menu, load, etc
       this.mapManager.loadMapById(1);
+
       // place player on the WORLD map
-      this.player.setWorldPosX(9 * GameParam.TILE_SIZE);
-      this.player.setWorldPosY(7 * GameParam.TILE_SIZE);
+      this.player.setWorldCol(9);
+      this.player.setWorldRow(7);
+      this.player.setShiftX(0);
+      this.player.setShiftY(0);
 
    }
 

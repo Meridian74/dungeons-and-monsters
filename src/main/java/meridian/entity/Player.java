@@ -86,8 +86,8 @@ public class Player extends Entity {
          throw new IllegalStateException("Cannot load player' graphics" + e);
       }
 
-      // Set movement
-      setSpeed(GameParam.SCALE);
+      // Set movement (1 * 3 pixel)
+      setSpeed(GameParam.PIXEL_SCALE);
 
       // Set first appearance
       setDirection(Direction.DOWN);
@@ -102,15 +102,13 @@ public class Player extends Entity {
       // Update player's VERTICAL position.
       checkMovingVertically();
       checkTileBoundaryVertically();
-      automaticMovementVertically();
 
       // Update player's HORIZONTAL position.
       checkMovingHorizontally();
       checkTileBoundaryHorizontally();
-      automaticMovementHorizontally();
 
       // Calculate World Map Tile position.
-      calculateWorldMapTilePostion();
+      updateWorldMapPostion();
 
    }
 
@@ -181,74 +179,53 @@ public class Player extends Entity {
          activeMoveUp = true;
          setDirection(Direction.UP);
 
-         int newPosition = getWorldPosY() - getSpeed();
-         setWorldPosY(newPosition);
-
          // Checking the boundary of the World Map.
-         if (getWorldPosY() < mapManager.getWorldTop()) {
-            // Turn OFF active movement direction and roll back position.
+         if (getWorldRow() == mapManager.getWorldTop()) {
             activeMoveUp = false;
-            setWorldPosY(mapManager.getWorldTop());
+         }
+         else {
+            // Increase value of Y shift for map scrolling
+            int newValue = getShiftY() + getSpeed();
+            setShiftY(newValue);
          }
 
-      } else if (keyH.isDownPressed()) {
+      }
+      else if (keyH.isDownPressed()) {
          // Turn ON active movement direction
          activeMoveUp = false;
          activeMoveDown = true;
          setDirection(Direction.DOWN);
 
-         int newPosition = getWorldPosY() + getSpeed();
-         setWorldPosY(newPosition);
-
          // Checking the boundary of the World Map.
-         if (getWorldPosY() > mapManager.getWorldBottom()) {
-            // Turn OFF active movement direction and roll back position.
+         if (getWorldRow() == mapManager.getWorldBottom()) {
             activeMoveDown = false;
-            setWorldPosY(mapManager.getWorldBottom());
+
+         }
+         else {
+            // Decrease value of Y shift for map scrolling
+            int newValue = getShiftY() - getSpeed();
+            setShiftY(newValue);
          }
 
+      }
+
+      // Doing continuous vertical movement.
+      if (!keyH.isUpPressed() && this.activeMoveUp && getShiftY() != 0) {
+         int newValue = getShiftY() + getSpeed();
+         setShiftY(newValue);
+      }
+      else if (!keyH.isDownPressed() && this.activeMoveDown && getShiftY() != 0) {
+         int newValue = getShiftY() - getSpeed();
+         setShiftY(newValue);
       }
 
    }
 
    private void checkTileBoundaryVertically() {
-      // If reached a TILE edge, turn OFF automatic movement.
-      if ((!keyH.isUpPressed() || !keyH.isDownPressed()) &&
-            getWorldPosY() % GameParam.TILE_SIZE == 0) {
-
+      // If reached a TILE edge and not pressing the key THEN turn OFF automatic movement.
+      if ((!keyH.isUpPressed() || !keyH.isDownPressed()) && getShiftY() == 0) {
          activeMoveUp = false;
          activeMoveDown = false;
-      }
-
-   }
-
-   private void automaticMovementVertically() {
-      // Doing continuous vertical movement by tile size accurate.
-      if (!keyH.isUpPressed() && this.activeMoveUp &&
-            getWorldPosY() % GameParam.TILE_SIZE != 0) {
-
-         // Include fitting of the Y coordinate to the Tile's grid with pixel's SCALE.
-         if (getWorldPosY() % GameParam.TILE_SIZE < getSpeed()) {
-            int newPosition = getWorldPosY() - getWorldPosY() % GameParam.SCALE;
-            setWorldPosY(newPosition);
-            activeMoveUp = false;
-         } else {
-            int newPosition = getWorldPosY() - getSpeed();
-            setWorldPosY(newPosition);
-         }
-      } else if (!keyH.isDownPressed() && this.activeMoveDown &&
-            getWorldPosY() % GameParam.TILE_SIZE != 0) {
-
-         // Include fitting of the Y coordinate to the Tile's grid with pixel's SCALE.
-         if (getWorldPosY() % GameParam.TILE_SIZE < getSpeed()) {
-            int newPosition = getWorldPosY() + getWorldPosY() % GameParam.SCALE;
-            setWorldPosY(newPosition);
-            activeMoveDown = false;
-         } else {
-            int newPosition = getWorldPosY() + getSpeed();
-            setWorldPosY(newPosition);
-         }
-
       }
 
    }
@@ -261,83 +238,88 @@ public class Player extends Entity {
          activeMoveLeft = true;
          setDirection(Direction.LEFT);
 
-         int newPosition = getWorldPosX() - getSpeed();
-         setWorldPosX(newPosition);
-
          // Checking the boundary of the World Map.
-         if (getWorldPosX() < mapManager.getWorldLeft()) {
-            // Turn OFF active movement direction and roll back position.
+         if (getWorldCol() == mapManager.getWorldLeft()) {
             activeMoveLeft = false;
-            setWorldPosX(mapManager.getWorldLeft());
+         }
+         else {
+            // Increase value of X shift for map scrolling
+            int newValue = getShiftX() + getSpeed();
+            setShiftX(newValue);
          }
 
-      } else if (keyH.isRightPressed()) {
+      }
+      else if (keyH.isRightPressed()) {
          // Turn ON active movement direction
          activeMoveLeft = false;
          activeMoveRight = true;
          setDirection(Direction.RIGHT);
 
-         int newPosition = getWorldPosX() + getSpeed();
-         setWorldPosX(newPosition);
-
          // Checking the boundary of the World Map.
-         if (getWorldPosX() > mapManager.getWorldRight()) {
-            // Turn OFF active movement direction
+         if (getWorldCol() == mapManager.getWorldRight()) {
             activeMoveRight = false;
-            setWorldPosX(mapManager.getWorldRight());
+
+         }
+         else {
+            // Decrease value of X shift for map scrolling
+            int newValue = getShiftX() - getSpeed();
+            setShiftX(newValue);
          }
 
+      }
+
+      // Doing continuous horizontal movement.
+      if (!keyH.isLeftPressed() && this.activeMoveLeft && getShiftX() != 0) {
+         int newValue = getShiftX() + getSpeed();
+         setShiftX(newValue);
+      }
+      else if (!keyH.isRightPressed() && this.activeMoveRight && getShiftX() != 0) {
+         int newValue = getShiftX() - getSpeed();
+         setShiftX(newValue);
       }
 
    }
 
    private void checkTileBoundaryHorizontally() {
       // If reached a TILE edge, turn OFF movement
-      if ((!keyH.isLeftPressed() || !keyH.isRightPressed()) &&
-            getWorldPosX() % GameParam.TILE_SIZE == 0) {
-
+      if ((!keyH.isLeftPressed() || !keyH.isRightPressed()) && getShiftX() == 0) {
          activeMoveLeft = false;
          activeMoveRight = false;
       }
 
    }
 
-   private void automaticMovementHorizontally() {
-      // Doing continuous horizontal movement by tile size accurate.
-      if (!keyH.isLeftPressed() && this.activeMoveLeft &&
-            getWorldPosX() % GameParam.TILE_SIZE != 0) {
-
-         // Include fitting of the X coordinate to the Tile's grid with pixel's SCALE.
-         if (getWorldPosX() % GameParam.TILE_SIZE < getSpeed()) {
-            int newPosition = getWorldPosX() - getWorldPosX() % GameParam.SCALE;
-            setWorldPosX(newPosition);
-            activeMoveLeft = false;
-         } else {
-            int newPosition = getWorldPosX() - getSpeed();
-            setWorldPosX(newPosition);
-         }
-      } else if (!keyH.isRightPressed() && this.activeMoveRight &&
-            getWorldPosX() % GameParam.TILE_SIZE != 0) {
-
-         // Include fitting of the X coordinate to the Tile's grid with pixel's SCALE.
-         if (getWorldPosX() % GameParam.TILE_SIZE < getSpeed()) {
-            int newPosition = getWorldPosX() + GameParam.SCALE - getWorldPosX() % GameParam.TILE_SIZE;
-            setWorldPosX(newPosition);
-            activeMoveRight = false;
-         } else {
-            int newPosition = getWorldPosX() + getSpeed();
-            setWorldPosX(newPosition);
-         }
-
+   private void updateWorldMapPostion() {
+      // Update Y coord
+      int shift = getShiftY();
+      if (shift >= GameParam.TILE_SIZE) {
+         int position = getWorldRow();
+         position--;
+         setWorldRow(position);
+         setShiftY(shift - GameParam.TILE_SIZE);
+      }
+      else if (shift < 0) {
+         int position = getWorldRow();
+         position++;
+         setWorldRow(position);
+         setShiftY(shift + GameParam.TILE_SIZE);
       }
 
-   }
+      // Update X coord
+      shift = getShiftX();
+      if (shift >= GameParam.TILE_SIZE) {
+         int position = getWorldCol();
+         position--;
+         setWorldCol(position);
+         setShiftX(shift - GameParam.TILE_SIZE);
+      }
+      else if (shift < 0) {
+         int position = getWorldCol();
+         position++;
+         setWorldCol(position);
+         setShiftX(shift + GameParam.TILE_SIZE);
+      }
 
-   private void calculateWorldMapTilePostion() {
-      int newYRow = getWorldPosY() / GameParam.TILE_SIZE;
-      setWorldRow(newYRow);
-      int newXCol = getWorldPosX() / GameParam.TILE_SIZE;
-      setWorldCol(newXCol);
    }
 
 }

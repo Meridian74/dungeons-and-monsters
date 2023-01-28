@@ -95,8 +95,8 @@ public class MapManager {
             // Define World Map edges.
             this.worldLeft = 0;
             this.worldTop = 0;
-            this.worldRight = (this.mapWidth - 1) * GameParam.TILE_SIZE;
-            this.worldBottom = (this.mapHeight - 1) * GameParam.TILE_SIZE;
+            this.worldRight = this.mapWidth;
+            this.worldBottom = this.mapHeight;
 
             break;
          }
@@ -156,9 +156,7 @@ public class MapManager {
    public void drawMap(Graphics2D g2, Player player) {
       BufferedImage image;
       int drawX;
-      int shiftX;
       int drawY;
-      int shiftY;
 
       int startRow = player.getWorldRow() - GameParam.MAX_SCREEN_ROW / 2 - 1;
       int startCol = player.getWorldCol() - GameParam.MAX_SCREEN_COL / 2 - 1;
@@ -167,18 +165,14 @@ public class MapManager {
 
       for (int row = startRow; row <= endRow && row < cells.length; row++) {
          if (row < 0) continue;
-         // Y shift by player vertical movement phase pixels
-         shiftY = player.getWorldPosY() % GameParam.TILE_SIZE;
-         drawY = (row - startRow - 1) * GameParam.TILE_SIZE - shiftY;
+         drawY = (row - startRow - 1) * GameParam.TILE_SIZE + player.getShiftY();
 
          for (int col = startCol; col <= endCol && col < cells[row].length; col++) {
             if (col < 0) continue;
 
             Tile tile = cells[row][col].getTile();
             if (tile.getId() != VOID_CELL_ID) {
-               // X shift by player horizontal movement phase pixels
-               shiftX = player.getWorldPosX() % GameParam.TILE_SIZE;
-               drawX = (col - startCol - 1) * GameParam.TILE_SIZE - shiftX;
+               drawX = (col - startCol - 1) * GameParam.TILE_SIZE + player.getShiftX();
 
                // Drawing current tile.
                image = tile.getImage();
