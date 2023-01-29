@@ -31,6 +31,7 @@ public class MapManager {
    private static final int VOID_CELL_ID = 9999;
 
    private final TileManager tileManager;
+   private final ShadeMatrix shadeMatrix;
 
    private int currentMapId;
    private int mapWidth;
@@ -47,8 +48,9 @@ public class MapManager {
    // Storing all information of World Map in MapCells
    MapCell[][] cells;
 
-   public MapManager(TileManager tm) {
+   public MapManager(TileManager tm, ShadeMatrix sm) {
       this.tileManager = tm;
+      this.shadeMatrix = sm;
       this.maps = this.init();
    }
 
@@ -120,6 +122,7 @@ public class MapManager {
 
                   int tileIndex = Integer.parseInt(currentRowData[currentCol]);
                   Tile tile;
+
                   if (tileIndex != VOID_CELL_ID) {
                      tile = tileManager.getTileByIndex(tileIndex);
                   }
@@ -130,8 +133,6 @@ public class MapManager {
 
                   MapCell cell = new MapCell();
                   cell.setTile(tile);
-                  cell.setCurrentOpacity(1.0 - tile.getBlockFieldOfVision());
-
                   cells[row][currentCol] = cell;
 
                   currentCol++;
@@ -149,14 +150,11 @@ public class MapManager {
 
    }
 
-   public void updateLights() {
-      // TODO set: cell opacity
-   }
-
    public void drawMap(Graphics2D g2, Player player) {
       BufferedImage image;
       int drawX;
       int drawY;
+      Tile tile;
 
       int startRow = player.getWorldRow() - GameParam.MAX_SCREEN_ROW / 2 - 1;
       int startCol = player.getWorldCol() - GameParam.MAX_SCREEN_COL / 2 - 1;
@@ -170,18 +168,60 @@ public class MapManager {
          for (int col = startCol; col <= endCol && col < cells[row].length; col++) {
             if (col < 0) continue;
 
-            Tile tile = cells[row][col].getTile();
+            tile = cells[row][col].getTile();
             if (tile.getId() != VOID_CELL_ID) {
                drawX = (col - startCol - 1) * GameParam.TILE_SIZE + player.getShiftX();
 
                // Drawing current tile.
                image = tile.getImage();
+               float calculatedOpacity = cells[row][col].getVisibleOpacity();
+               float currentOpacity = cells[row][col].getCurrentOpacity();
+               g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, currentOpacity));
                g2.drawImage(image, drawX, drawY, GameParam.TILE_SIZE, GameParam.TILE_SIZE, null);
+               if (currentOpacity < calculatedOpacity) {
+                  currentOpacity += 0.08f;
+                  if (currentOpacity > calculatedOpacity) {
+                     currentOpacity = calculatedOpacity;
+                  }
+               }
+               else if (currentOpacity > calculatedOpacity){
+                  currentOpacity -= 0.008f;
+                  if (currentOpacity < calculatedOpacity) {
+                     currentOpacity = calculatedOpacity;
+                  }
+               }
+
+               cells[row][col].setCurrentOpacity(currentOpacity);
+
             }
 
          }
 
       }
+
+   }
+
+   public void updateLights(Player player) {
+      int startRow = player.getWorldRow() - GameParam.MAX_SCREEN_ROW / 2 - 1;
+      if (startRow < 0) startRow = 0;
+
+      int startCol = player.getWorldCol() - GameParam.MAX_SCREEN_COL / 2 - 1;
+      if (startCol < 0) startCol = 0;
+
+      int endRow = startRow + GameParam.MAX_SCREEN_ROW + 2;
+      if (endRow > cells.length) endRow = cells.length;
+
+      int endCol = startCol + GameParam.MAX_SCREEN_COL + 2;
+
+      // Init opacity value of all cells to fully visible.
+      for (int row = startRow; row < endRow; row++) {
+         for (int col = startCol; col <= endCol && col < cells[row].length; col++) {
+            cells[row][col].setVisibleOpacity(1.0f);
+         }
+      }
+
+      // Calculate viewed opacity.
+      shadeMatrix.updateMapCellsVisibility(this.cells, player);
 
    }
 

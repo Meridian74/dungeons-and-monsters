@@ -12,13 +12,16 @@ import java.util.List;
 
 @Setter
 @Getter
-public class ShadowCastingPosition {
+public class ViewPosition {
 
+   // Relative to the player's position.
    private int x;
    private int y;
-   private List<DarkenedCell> darkenedCells = new ArrayList<>();
 
-   public ShadowCastingPosition(int x, int y) {
+   // List of the all shaded cells.
+   private List<CellDarkener> cellDarkeners = new ArrayList<>();
+
+   public ViewPosition(int x, int y) {
       this.x = x;
       this.y = y;
    }

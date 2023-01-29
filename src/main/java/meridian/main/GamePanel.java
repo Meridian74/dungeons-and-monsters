@@ -6,6 +6,7 @@ package meridian.main;
 
 import meridian.entity.Player;
 import meridian.map.MapManager;
+import meridian.map.ShadeMatrix;
 import meridian.tile.TileManager;
 
 import javax.swing.JPanel;
@@ -21,8 +22,12 @@ public class GamePanel extends JPanel implements Runnable {
    // Tile graphics.
    private TileManager tileManager = new TileManager();
 
+   // Opacity (shade) calculator
+   private ShadeMatrix shadeMatrix = new ShadeMatrix();
+
    // World Map graphics.
-   private MapManager mapManager = new MapManager(this.tileManager);
+   private MapManager mapManager = new MapManager(this.tileManager, this.shadeMatrix);
+
 
    // Add a Player.
    private Player player = new Player(keyHandler, mapManager);
@@ -43,8 +48,8 @@ public class GamePanel extends JPanel implements Runnable {
       this.mapManager.loadMapById(1);
 
       // place player on the WORLD map
-      this.player.setWorldCol(9);
-      this.player.setWorldRow(7);
+      this.player.setWorldCol(4);
+      this.player.setWorldRow(3);
       this.player.setShiftX(0);
       this.player.setShiftY(0);
 
@@ -96,7 +101,7 @@ public class GamePanel extends JPanel implements Runnable {
    public void update() {
 
       player.update();
-      mapManager.updateLights();
+      mapManager.updateLights(player);
 
    }
 

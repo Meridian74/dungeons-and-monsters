@@ -9,13 +9,16 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DarkenedCell {
+public class CellDarkener {
 
+   // Relative to the player's position
    private int x;
    private int y;
-   private double value;
 
-   public DarkenedCell(int x, int y, double value) {
+   // Cell opacity modifier.
+   private float value;
+
+   public CellDarkener(int x, int y, float value) {
       this.x = x;
       this.y = y;
       this.value = value;

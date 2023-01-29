@@ -37,7 +37,7 @@ public class TileManager {
             tile.setId(tc.getId());
             tile.setCollision(tc.isCollision());
             tile.setDescription(tc.getDescription());
-            tile.setBlockFieldOfVision(tc.getTransparency());
+            tile.setBlockFieldOfVision(tc.getShadeFactor());
 
             BufferedImage tileImage = image.getSubimage(
                   GameParam.ORIGINAL_TILE_SIZE * tc.getX(),

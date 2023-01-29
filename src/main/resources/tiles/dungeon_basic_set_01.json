@@ -6,7 +6,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: top of 1x1 - '┌┐'"
   },
   {
@@ -16,7 +16,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": false,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: external bottom-right corner - '┌─'"
   },
   {
@@ -26,7 +26,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: bottom horizontal middle - 'ˉ'"
   },
   {
@@ -36,7 +36,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: external bottom-left corner - '─┐'"
   },
   {
@@ -46,7 +46,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: next down of 1x1 - '║'"
   },
   {
@@ -56,7 +56,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: next down on the external bottom-right corner vertically - '|'"
   },
   {
@@ -66,7 +66,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: next down on the external bottom-left corner vertically - '|'"
   },
   {
@@ -76,7 +76,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: middle of 1x1 I. - '║"
   },
   {
@@ -86,7 +86,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: right wall vertically I. - '|'"
   },
   {
@@ -96,7 +96,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: left wall vertically I. - '|'"
   },
   {
@@ -106,7 +106,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: middle of 1x1 II. - '║"
   },
   {
@@ -116,7 +116,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: right wall vertically II. - '|'"
   },
   {
@@ -126,7 +126,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: left wall vertically II. - '|'"
   },
   {
@@ -136,7 +136,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: next up of 1x1 - '║'"
   },
   {
@@ -146,7 +146,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: next up on the external top-right corner vertically - '|'"
   },
   {
@@ -156,7 +156,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: next down on the external top-left corner vertically - '|'"
   },
   {
@@ -166,7 +166,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: down of 1x1 - '└┘'"
   },
   {
@@ -176,7 +176,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": false,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: inside top-right corner - '└─'"
   },
   {
@@ -186,7 +186,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: top horizontal middle - '_'"
   },
   {
@@ -196,7 +196,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: external top-left corner - '─┘'"
   },
   {
@@ -206,7 +206,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: top horizontal middle with a hole in middle - '─'"
   },
   {
@@ -216,7 +216,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: top horizontal middle with a hole at bottom - '─'"
   },
   {
@@ -226,7 +226,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": false,
-    "transparency": 0.0,
+    "shadeFactor": 0.0,
     "description": "Floor: plain"
   },
   {
@@ -236,7 +236,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": false,
-    "transparency": 0.0,
+    "shadeFactor": 0.0,
     "description": "Floor: with many cracks"
   },
   {
@@ -246,7 +246,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": false,
-    "transparency": 0.0,
+    "shadeFactor": 0.0,
     "description": "Floor: with less cracks I."
   },
   {
@@ -256,7 +256,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": false,
-    "transparency": 0.0,
+    "shadeFactor": 0.0,
     "description": "Floor: with less cracks II."
   },
   {
@@ -266,7 +266,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": false,
-    "transparency": 0.0,
+    "shadeFactor": 0.0,
     "description": "Floor: with dirty - bottom-right"
   },
   {
@@ -276,7 +276,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": false,
-    "transparency": 0.0,
+    "shadeFactor": 0.0,
     "description": "Floor: with dirty - bottom-left"
   },
   {
@@ -286,7 +286,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": false,
-    "transparency": 0.0,
+    "shadeFactor": 0.0,
     "description": "Floor: with dirty - top-right"
   },
   {
@@ -296,7 +296,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": false,
-    "transparency": 0.0,
+    "shadeFactor": 0.0,
     "description": "Floor: with dirty - bottom-left"
   },
   {
@@ -306,7 +306,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: inner right side '|'"
   },
   {
@@ -316,7 +316,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: inner left side '|'"
   },
   {
@@ -326,7 +326,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: external bottom-right edge '┘'"
   },
   {
@@ -336,7 +336,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: external bottom-left edge '└'"
   },
   {
@@ -346,7 +346,7 @@
     "sizeX": 16,
     "sizeY": 16,
     "collision": true,
-    "transparency": 1.0,
+    "shadeFactor": 1.0,
     "description": "Wall: upper fog for horizontal middle wall"
   }
 

@@ -142,6 +142,8 @@ public class Player extends Entity {
       }
 
       // show Player's character
+      float opacity = 1.0f;
+      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
       g2.drawImage(image, DRAWING_POSITION_X, DRAWING_POSITION_Y,
             GameParam.TILE_SIZE, GameParam.TILE_SIZE, null);
 

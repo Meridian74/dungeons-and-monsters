@@ -18,7 +18,7 @@ public class TileConfig {
    private int sizeX;
    private int sizeY;
    private boolean collision;
-   private double transparency;
+   private float shadeFactor;
    private String description;
 
 }

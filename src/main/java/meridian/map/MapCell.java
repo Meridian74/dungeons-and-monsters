@@ -15,8 +15,8 @@ public class MapCell {
    // Tile grafix
    private Tile tile;
 
-   double currentOpacity;
-   double visibleOpacity;
+   float currentOpacity;
+   float visibleOpacity;
 
    // -- bottom Decoration element (fountain bottom part)
    // -- Gateway in direction to another map (-->id, x, y)
