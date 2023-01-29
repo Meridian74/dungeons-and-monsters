@@ -83,7 +83,7 @@ public class ShadeMatrix {
 
    }
 
-   private static void setCoveredMapCells(MapCell[][] cells, int entityX, int entityY, ViewPosition vp, float transparency) {
+   private void setCoveredMapCells(MapCell[][] cells, int entityX, int entityY, ViewPosition vp, float transparency) {
       MapCell cell;
       int coveredCellRow;
       int coveredCellCol;
@@ -127,7 +127,7 @@ public class ShadeMatrix {
          ViewPosition viewPosition = new ViewPosition(xx, yy);
          findCoveredCells(xx, yy, deltaY1, deltaY2, viewPosition);
 
-         // extends data if it is X axis
+         // extends data if it is situated on the X axis
          if (yy == 0) {
             findMoreCoveredCellByHorizontalAxis(viewPosition);
          }
@@ -162,7 +162,7 @@ public class ShadeMatrix {
       return result;
    }
 
-   private static void findCoveredCells(int xx, int yy, float deltaY1, float deltaY2, ViewPosition viewPosition) {
+   private void findCoveredCells(int xx, int yy, float deltaY1, float deltaY2, ViewPosition viewPosition) {
       // Search shaded map cells - in XY triangle.
       for (int row = 0; row <= HEIGHT; row++) {
          for (int col = row; col <= WIDTH; col++) {
@@ -177,7 +177,7 @@ public class ShadeMatrix {
 
    }
 
-   private static void findMoreCoveredCellsByXYDiagonal(ViewPosition viewPosition) {
+   private void findMoreCoveredCellsByXYDiagonal(ViewPosition viewPosition) {
       List<CellDarkener> additionalDarkeners = mirrorDarkenersOnXY(viewPosition, 0);
       // Update list if not empty (because the screen shape --> width > height).
       if (!additionalDarkeners.isEmpty()) {
@@ -186,17 +186,16 @@ public class ShadeMatrix {
 
    }
 
-   private static void findMoreCoveredCellByHorizontalAxis(ViewPosition viewPosition) {
+   private void findMoreCoveredCellByHorizontalAxis(ViewPosition viewPosition) {
       List<CellDarkener> additionalDarkeners = mirrorDarkenersOnY(viewPosition);
-      viewPosition.getCellDarkeners().addAll(additionalDarkeners);
+      // Update list if not empty (because the screen shape --> width > height).
       if (!additionalDarkeners.isEmpty()) {
          viewPosition.getCellDarkeners().addAll(additionalDarkeners);
       }
 
    }
 
-
-   private static boolean isFullyVisibleCells(int xx, int yy, int col, int row) {
+   private boolean isFullyVisibleCells(int xx, int yy, int col, int row) {
       boolean result;
       // This is the camera cell.
       if (row == 0 && col == 0) {
@@ -215,7 +214,7 @@ public class ShadeMatrix {
       return result;
    }
 
-   private static void updateViewPositionCellDarkeners(ViewPosition viewPosition, float deltaY1, float deltaY2, int col, int row) {
+   private void updateViewPositionCellDarkeners(ViewPosition viewPosition, float deltaY1, float deltaY2, int col, int row) {
       // Upper line of light ray.
       float lightY1 = (row - 0.5f);
       // Bottom line of light ray.
@@ -249,15 +248,15 @@ public class ShadeMatrix {
 
    }
 
-   private static List<CellDarkener> mirrorDarkenersOnY(ViewPosition casterCell) {
+   private List<CellDarkener> mirrorDarkenersOnY(ViewPosition casterCell) {
       List<CellDarkener> darkeners = casterCell.getCellDarkeners();
       List<CellDarkener> additionalDarkeners = new ArrayList<>();
       for (CellDarkener cd : darkeners) {
          int x = cd.getX();
          int y = cd.getY();
-         if (y != 0 && x <= HEIGHT + 2) { // Because the screen wider than tall
+         if (y != 0 && x <= WIDTH) { // Because the screen wider than tall
 
-            // FYI: Swap Y with -y!
+            // FYI: Swap Y with -Y!
             CellDarkener newCd = new CellDarkener(x, -y, cd.getValue());
 
             additionalDarkeners.add(newCd);
@@ -271,7 +270,7 @@ public class ShadeMatrix {
     * @param offset 0: diagonal, 1: non-diagonal mirroring
     * @return ranged cell visibility data list
     */
-   private static List<CellDarkener> mirrorDarkenersOnXY(ViewPosition casterCell, int offset) {
+   private List<CellDarkener> mirrorDarkenersOnXY(ViewPosition casterCell, int offset) {
       List<CellDarkener> darkeners = casterCell.getCellDarkeners();
       List<CellDarkener> additionalDarkeners = new ArrayList<>();
       for (CellDarkener cd : darkeners) {
@@ -288,7 +287,7 @@ public class ShadeMatrix {
       return additionalDarkeners;
    }
 
-   private static List<ViewPosition> copyAndMirrorVertically(List<ViewPosition> result) {
+   private List<ViewPosition> copyAndMirrorVertically(List<ViewPosition> result) {
       // copy and mirror result VERTICALLY and add to result
       List<ViewPosition> additionalResult = new ArrayList<>();
       for (ViewPosition scp : result) {
@@ -313,7 +312,7 @@ public class ShadeMatrix {
       return additionalResult;
    }
 
-   private static List<ViewPosition> copyAndMirrorHorizontally(List<ViewPosition> originalResult) {
+   private List<ViewPosition> copyAndMirrorHorizontally(List<ViewPosition> originalResult) {
       // copy and mirror result HORIZONTALLY and add to result
       List<ViewPosition> additionalResult = new ArrayList<>();
       for (ViewPosition scp : originalResult) {

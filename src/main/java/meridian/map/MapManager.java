@@ -176,22 +176,12 @@ public class MapManager {
                image = tile.getImage();
                float calculatedOpacity = cells[row][col].getVisibleOpacity();
                float currentOpacity = cells[row][col].getCurrentOpacity();
+               currentOpacity = delayedFade(calculatedOpacity, currentOpacity);
+               cells[row][col].setCurrentOpacity(currentOpacity);
+
+               // Set opacity of next drawing of cell.
                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, currentOpacity));
                g2.drawImage(image, drawX, drawY, GameParam.TILE_SIZE, GameParam.TILE_SIZE, null);
-               if (currentOpacity < calculatedOpacity) {
-                  currentOpacity += 0.08f;
-                  if (currentOpacity > calculatedOpacity) {
-                     currentOpacity = calculatedOpacity;
-                  }
-               }
-               else if (currentOpacity > calculatedOpacity){
-                  currentOpacity -= 0.008f;
-                  if (currentOpacity < calculatedOpacity) {
-                     currentOpacity = calculatedOpacity;
-                  }
-               }
-
-               cells[row][col].setCurrentOpacity(currentOpacity);
 
             }
 
@@ -199,6 +189,22 @@ public class MapManager {
 
       }
 
+   }
+
+   private static float delayedFade(float calculatedOpacity, float currentOpacity) {
+      if (currentOpacity < calculatedOpacity) {
+         currentOpacity += 0.08f;
+         if (currentOpacity > calculatedOpacity) {
+            currentOpacity = calculatedOpacity;
+         }
+      }
+      else if (currentOpacity > calculatedOpacity){
+         currentOpacity -= 0.008f;
+         if (currentOpacity < calculatedOpacity) {
+            currentOpacity = calculatedOpacity;
+         }
+      }
+      return currentOpacity;
    }
 
    public void updateLights(Player player) {

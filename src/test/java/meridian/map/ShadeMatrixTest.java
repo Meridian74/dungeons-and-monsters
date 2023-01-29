@@ -16,7 +16,7 @@ class ShadeMatrixTest {
 //      int[][] coords = { {3, 1} };
 
       // test blocker coordinates - relative to viewing point coords
-      int[][] coords = { {5, 1} };
+      int[][] coords = { {1, 0} };
 
       ShadeMatrix vm = new ShadeMatrix(coords);
       List<ViewPosition> viewedPositions = vm.getViewPositions();
