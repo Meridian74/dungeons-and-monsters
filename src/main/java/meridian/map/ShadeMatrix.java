@@ -1,17 +1,17 @@
 /**
  * @author Meridian
- * @since  2023.
+ * @since 2023.
  */
 package meridian.map;
 
 
-import meridian.entity.Player;
+import meridian.entity.Entity;
 import meridian.main.GameParam;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Getter;
+
+import java.util.List;
+import java.util.ArrayList;
 
 
 @Getter
@@ -20,88 +20,92 @@ public class ShadeMatrix {
    private static final int WIDTH = GameParam.MAX_SCREEN_COL / 2 + 1;
    private static final int HEIGHT = GameParam.MAX_SCREEN_ROW / 2 + 1;
 
-   // Arrays of x, y coords
-   private static final int[][] OBJECT_SURROUND_COORDS = {
-         // first circle
+   // Arrays of relative X & Y coords from the Entity
+   private static final int[][] RELATIVE_COORDS = {
+         // 1st ring
          {1, 0}, {1, 1},
-//         {0, 1},
-         // second circle
+         // 2nd ring
          {2, 0}, {2, 1}, {2, 2},
-//         {1, 2}, {0, 2},
-         // third circle
+         // 3rd ring
          {3, 0}, {3, 1}, {3, 2}, {3, 3},
-//         {2, 3}, {1, 3}, {0, 3},
-         // 4th circle
+         // 4th ring
          {4, 0}, {4, 1}, {4, 2}, {4, 3}, {4, 4},
-//         {3, 4}, {2, 4}, {1, 4}, {0, 4},
-         // 5th circle
+         // 5th ring
          {5, 0}, {5, 1}, {5, 2}, {5, 3}, {5, 4}, {5, 5},
-//         {4, 5}, {3, 5}, {2, 5}, {1, 5}, {0, 5},
-         // 6th circle
+         // 6th ring
          {6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {6, 5}, {6, 6},
-//         {5, 6}, {4, 6}, {3, 6}, {2, 6}, {1, 6}, {0, 6},
-         // 7h part
+         // 7th ring
          {7, 0}, {7, 1}, {7, 2}, {7, 3}, {7, 4}, {7, 5}, {7, 6}, {7, 7},
-//         {6, 7}, {5, 7}, {4, 7}, {3, 7}, {2, 7}, {1, 7}, {0, 7},
-
-         // 8th part - left/right side of screen
+         // 8th ring - truncated with screen height
          {8, 0}, {8, 1}, {8, 2}, {8, 3}, {8, 4}, {8, 5}, {8, 6}, {8, 7},
-         // 9th part
+         // 9th ring - truncated with screen height
          {9, 0}, {9, 1}, {9, 2}, {9, 3}, {9, 4}, {9, 5}, {9, 6}, {9, 7},
    };
 
-   // PreCalculated cell visibility modifiers data
+   // Stored pre-calculated cell visibility modifiers with relative coords from Entity.
    private final List<ViewPosition> viewPositions;
 
+   // Basic constructor
    public ShadeMatrix() {
-      this.viewPositions = initData(OBJECT_SURROUND_COORDS);
+      this.viewPositions = initData(RELATIVE_COORDS);
    }
 
+   // Constructor for testing one or more given coords.
    public ShadeMatrix(int[][] coords) {
       this.viewPositions = initData(coords);
    }
 
-   public void updateMapCellsVisibility(MapCell[][] cells, Player player) {
-      int playerX = player.getWorldCol();
-      int playerY = player.getWorldRow();
+   public void updateMapCellsVisibility(MapCell[][] cells, Entity entity) {
+      int entityX = entity.getWorldCol();
+      int entityY = entity.getWorldRow();
       int viewedCellRow;
       int viewedCellCol;
-      int coveredCellRow;
-      int coveredCellCol;
-      MapCell cell;
 
       for (ViewPosition vp : viewPositions) {
-         viewedCellRow = playerY + vp.getY();
-         if (viewedCellRow < 0 || viewedCellRow > cells.length - 1)
+         viewedCellRow = entityY + vp.getY();
+         viewedCellCol = entityX + vp.getX();
+
+         if (viewedCellRow < 0 || viewedCellRow > cells.length - 1 ||
+               viewedCellCol < 0 || viewedCellCol > cells[viewedCellRow].length - 1) {
+
+            // Because of it is outside of World Map then get next...!
             continue;
+         }
 
-         viewedCellCol = playerX + vp.getX();
-         if (viewedCellCol < 0 || viewedCellCol > cells[viewedCellRow].length - 1)
+         float cellTransparency = cells[viewedCellRow][viewedCellCol].getTile().getTileTransparency();
+
+         // If it is not completely transparent, this cell will cover the cells behind it.
+         if (cellTransparency > 0.0001f) {
+            setCoveredMapCells(cells, entityX, entityY, vp, cellTransparency);
+         }
+
+      }
+
+   }
+
+   private static void setCoveredMapCells(MapCell[][] cells, int entityX, int entityY, ViewPosition vp, float transparency) {
+      MapCell cell;
+      int coveredCellRow;
+      int coveredCellCol;
+      for (CellDarkener currentDarkener : vp.getCellDarkeners()) {
+         coveredCellRow = entityY + currentDarkener.getY();
+         coveredCellCol = entityX + currentDarkener.getX();
+
+         if (coveredCellRow < 0 || coveredCellRow > cells.length - 1 ||
+               coveredCellCol < 0 || coveredCellCol > cells[coveredCellRow].length - 1) {
+
+            // Because of it is outside of World Map then get next...!
             continue;
+         }
 
-         float visibilityBlocker = cells[viewedCellRow][viewedCellCol].getTile().getBlockFieldOfVision();
-         // If the cell obscures the cells behind it
-         if (visibilityBlocker > 0.0001f) {
-            for (CellDarkener currentDarkener : vp.getCellDarkeners()) {
-               coveredCellRow = playerY + currentDarkener.getY();
-               if (coveredCellRow < 0 || coveredCellRow > cells.length - 1)
-                  continue;
+         cell = cells[coveredCellRow][coveredCellCol];
+         float opacity = cell.getVisibleOpacity();
+         if (opacity > 0.0001f) {
 
-               coveredCellCol = playerX + currentDarkener.getX();
-               if (coveredCellCol < 0 || coveredCellCol > cells[coveredCellRow].length - 1)
-                  continue;
-
-               cell = cells[coveredCellRow][coveredCellCol];
-               float opacity = cell.getVisibleOpacity();
-               if (opacity < 0.0001f)
-                  continue;
-
-               // Calculate opacity value according to the viewer point.
-               cell.setVisibleOpacity(opacity - currentDarkener.getValue() * visibilityBlocker);
-               if (cell.getVisibleOpacity() < 0.000f) {
-                  cell.setVisibleOpacity(0.0f);
-               }
-
+            // Calculate opacity value according to the viewer point.
+            cell.setVisibleOpacity(opacity - currentDarkener.getValue() * transparency);
+            if (cell.getVisibleOpacity() < 0.000f) {
+               cell.setVisibleOpacity(0.0f);
             }
 
          }
@@ -110,6 +114,7 @@ public class ShadeMatrix {
 
    }
 
+   // Precalculating data by examining shading vectors.
    private List<ViewPosition> initData(int[][] coords) {
       List<ViewPosition> result = new ArrayList<>();
 
@@ -118,42 +123,27 @@ public class ShadeMatrix {
          int yy = xyCoordinate[1];
          float deltaY1 = (yy - 0.5f) / xx;
          float deltaY2 = (yy + 0.5f) / xx;
-         ViewPosition castingPosition = new ViewPosition(xx, yy);
 
-         // Search shaded map cells - in XY triangle.
-         for (int row = 0; row <= HEIGHT; row++) {
-            for (int col = row; col <= WIDTH; col++) {
-               // Fully visible cells.
-               if (isFullyVisibleCells(xx, yy, col, row))
-                  continue;
+         ViewPosition viewPosition = new ViewPosition(xx, yy);
+         findCoveredCells(xx, yy, deltaY1, deltaY2, viewPosition);
 
-               findShadedCell(castingPosition, deltaY1, deltaY2, col, row);
-            }
-         }
-
-         // range data X diagonal
+         // extends data if it is X axis
          if (yy == 0) {
-            List<CellDarkener> additionalDarkeners = mirrorDarkenersOnY(castingPosition);
-            castingPosition.getCellDarkeners().addAll(additionalDarkeners);
+            findMoreCoveredCellByHorizontalAxis(viewPosition);
          }
-
-         // range date if it is X/Y diagonal
+         // extends date if it is X/Y diagonal
          if (xx == yy) {
-            List<CellDarkener> additionalDarkeners = mirrorDarkenersOnXY(castingPosition, 0);
-            // Update list if not empty (because the screen shape --> width > height).
-            if (!additionalDarkeners.isEmpty()) {
-               castingPosition.getCellDarkeners().addAll(additionalDarkeners);
-            }
+            findMoreCoveredCellsByXYDiagonal(viewPosition);
          }
 
-         // Save position with shaded cell list into result.
-         result.add(castingPosition);
+         // Save result in this position with list of fully or partially covered cells.
+         result.add(viewPosition);
 
-         // Copy and add mirrored position's result
+         // Copy and add mirrored position's result - obtaining a __QUARTER__ of the whole map.
          if (xx != yy) {
             // Save mirrored new position with shaded cell list into result.
             ViewPosition mirroredXYPosition = new ViewPosition(yy, xx);
-            List<CellDarkener> mirroredDarkeners = mirrorDarkenersOnXY(castingPosition, 1);
+            List<CellDarkener> mirroredDarkeners = mirrorDarkenersOnXY(viewPosition, 1);
             mirroredXYPosition.getCellDarkeners().addAll(mirroredDarkeners);
 
             result.add(mirroredXYPosition);
@@ -161,15 +151,48 @@ public class ShadeMatrix {
 
       }
 
-      // Extend result with HORIZONTALLY mirrored positions.
+      // Mirror result HORIZONTALLY - obtaining a __HALF__ of the whole map.
       List<ViewPosition> mirroredX = copyAndMirrorHorizontally(result);
       result.addAll(mirroredX);
 
-      // Extend result with VERTICALLY mirrored positions.
+      // Mirror result VERTICALLY - obtaining a __FULL__ of the whole map.
       List<ViewPosition> mirroredY = copyAndMirrorVertically(result);
       result.addAll(mirroredY);
 
       return result;
+   }
+
+   private static void findCoveredCells(int xx, int yy, float deltaY1, float deltaY2, ViewPosition viewPosition) {
+      // Search shaded map cells - in XY triangle.
+      for (int row = 0; row <= HEIGHT; row++) {
+         for (int col = row; col <= WIDTH; col++) {
+
+            // This is a fully visible cells - get next.
+            if (isFullyVisibleCells(xx, yy, col, row))
+               continue;
+
+            updateViewPositionCellDarkeners(viewPosition, deltaY1, deltaY2, col, row);
+         }
+      }
+
+   }
+
+   private static void findMoreCoveredCellsByXYDiagonal(ViewPosition viewPosition) {
+      List<CellDarkener> additionalDarkeners = mirrorDarkenersOnXY(viewPosition, 0);
+      // Update list if not empty (because the screen shape --> width > height).
+      if (!additionalDarkeners.isEmpty()) {
+         viewPosition.getCellDarkeners().addAll(additionalDarkeners);
+      }
+
+   }
+
+   private static void findMoreCoveredCellByHorizontalAxis(ViewPosition viewPosition) {
+      List<CellDarkener> additionalDarkeners = mirrorDarkenersOnY(viewPosition);
+      viewPosition.getCellDarkeners().addAll(additionalDarkeners);
+      if (!additionalDarkeners.isEmpty()) {
+         viewPosition.getCellDarkeners().addAll(additionalDarkeners);
+      }
+
    }
 
 
@@ -186,14 +209,13 @@ public class ShadeMatrix {
       // Cell is not situated in the direction of the shadow
       else if (col < xx) {
          result = true;
-      }
-      else {
+      } else {
          result = false;
       }
       return result;
    }
 
-   private static void findShadedCell(ViewPosition vbc, float deltaY1, float deltaY2, int col, int row) {
+   private static void updateViewPositionCellDarkeners(ViewPosition viewPosition, float deltaY1, float deltaY2, int col, int row) {
       // Upper line of light ray.
       float lightY1 = (row - 0.5f);
       // Bottom line of light ray.
@@ -205,9 +227,8 @@ public class ShadeMatrix {
       float shadowY2 = col * deltaY2;
 
       // Fully shaded cell.
-      if(lightY1 >= shadowY1 && lightY2 <= shadowY2) {
-         vbc.getCellDarkeners().add(new CellDarkener(col, row, 1.0f));
-
+      if (lightY1 >= shadowY1 && lightY2 <= shadowY2) {
+         viewPosition.getCellDarkeners().add(new CellDarkener(col, row, 1.0f));
          return;
       }
 
@@ -223,8 +244,7 @@ public class ShadeMatrix {
          portionIsModified = true;
       }
       if (portionIsModified) {
-         vbc.getCellDarkeners().add(new CellDarkener(col, row, portion));
-
+         viewPosition.getCellDarkeners().add(new CellDarkener(col, row, portion));
       }
 
    }

@@ -14,7 +14,10 @@ class ShadeMatrixTest {
    @Test
    void visibleMatrixInitData() {
 //      int[][] coords = { {3, 1} };
-      int[][] coords = { {2, 1} };
+
+      // test blocker coordinates - relative to viewing point coords
+      int[][] coords = { {5, 1} };
+
       ShadeMatrix vm = new ShadeMatrix(coords);
       List<ViewPosition> viewedPositions = vm.getViewPositions();
 
@@ -38,7 +41,7 @@ class ShadeMatrixTest {
       ShadeMatrix vm = new ShadeMatrix();
       List<ViewPosition> preCalculatedData = vm.getViewPositions();
 
-      assertEquals(540, preCalculatedData.size());
+      assertEquals(344, preCalculatedData.size());
    }
 
 }

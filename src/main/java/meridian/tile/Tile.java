@@ -30,6 +30,6 @@ public class Tile {
     * way from the direction of the field of view
     * 0.0 = 100% transparent, 1.0 = 100% block visible of neighborg cell - def: 100% transparent
     */
-   private float blockFieldOfVision = 0.0f;
+   private float tileTransparency = 0.0f;
 
 }
