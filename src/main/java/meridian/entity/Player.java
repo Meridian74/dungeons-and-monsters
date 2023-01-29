@@ -34,6 +34,8 @@ public class Player extends Entity {
    private boolean activeMoveUp;
    private boolean activeMoveDown;
 
+   private int lightCircle = 2;
+
 
    // Constructor.
    public Player(KeyHandler kh, MapManager mm) {

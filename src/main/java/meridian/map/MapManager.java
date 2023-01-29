@@ -219,16 +219,39 @@ public class MapManager {
 
       int endCol = startCol + GameParam.MAX_SCREEN_COL + 2;
 
-      // Init opacity value of all cells to fully visible.
+      // Reset opacity value of all cells to fully visible.
       for (int row = startRow; row < endRow; row++) {
          for (int col = startCol; col <= endCol && col < cells[row].length; col++) {
-            cells[row][col].setVisibleOpacity(1.0f);
+            float distance = calculateDistance(player, row, col);
+            float opacityFactor = calculateOpacityFactor(player, distance);
+            cells[row][col].setVisibleOpacity(opacityFactor);
          }
       }
 
       // Calculate viewed opacity.
       shadeMatrix.updateMapCellsVisibility(this.cells, player);
 
+   }
+
+   private float calculateDistance(Player player, int row, int col) {
+      int playerX = player.getWorldCol();
+      int playerY = player.getWorldRow();
+      // C^2 = A^2 + B^2 ... Pythagorean theorem.
+      double value = 0.0 + (playerX - col) * (playerX - col) + (playerY - row) * (playerY - row);
+      return (float) Math.sqrt(value);
+
+   }
+
+   private float calculateOpacityFactor(Player player, float distance) {
+      int sight = player.getLightCircle();
+      float result = (distance * -0.1428f) + 1.0f + sight * 0.1428f;
+      if (result < 0.0f) {
+         result = 0.0f;
+      }
+      if (result > 1.0f) {
+         result = 1.0f;
+      }
+      return result;
    }
 
 }

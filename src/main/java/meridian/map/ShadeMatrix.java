@@ -83,7 +83,7 @@ public class ShadeMatrix {
 
    }
 
-   private void setCoveredMapCells(MapCell[][] cells, int entityX, int entityY, ViewPosition vp, float transparency) {
+   private void setCoveredMapCells(MapCell[][] cells, int entityX, int entityY, ViewPosition vp, float blockerCellTransparency) {
       MapCell cell;
       int coveredCellRow;
       int coveredCellCol;
@@ -103,8 +103,8 @@ public class ShadeMatrix {
          if (opacity > 0.0001f) {
 
             // Calculate opacity value according to the viewer point.
-            cell.setVisibleOpacity(opacity - currentDarkener.getValue() * transparency);
-            if (cell.getVisibleOpacity() < 0.000f) {
+            cell.setVisibleOpacity(opacity - currentDarkener.getValue() * blockerCellTransparency);
+            if (cell.getVisibleOpacity() < 0.0f) {
                cell.setVisibleOpacity(0.0f);
             }
 
