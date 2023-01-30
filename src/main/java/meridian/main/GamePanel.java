@@ -5,6 +5,7 @@
 package meridian.main;
 
 import meridian.entity.Player;
+import meridian.map.CollisionChecker;
 import meridian.map.MapManager;
 import meridian.map.ShadeMatrix;
 import meridian.tile.TileManager;
@@ -28,6 +29,8 @@ public class GamePanel extends JPanel implements Runnable {
    // World Map graphics.
    private MapManager mapManager = new MapManager(this.tileManager, this.shadeMatrix);
 
+   // Collision handler.
+   private CollisionChecker collisionChecker = new CollisionChecker(this.mapManager);
 
    // Add a Player.
    private Player player = new Player(keyHandler, mapManager);
