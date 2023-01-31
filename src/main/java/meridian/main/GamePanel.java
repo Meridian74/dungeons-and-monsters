@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
    private CollisionChecker collisionChecker = new CollisionChecker(this.mapManager);
 
    // Add a Player.
-   private Player player = new Player(keyHandler, mapManager);
+   private Player player = new Player(keyHandler, this.collisionChecker);
 
    // Game thread.
    private Thread gameThread;

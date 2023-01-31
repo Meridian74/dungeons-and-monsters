@@ -17,6 +17,7 @@ public class Entity {
    // Position on the world map by tilesize.
    private int worldCol;
    private int worldRow;
+   // scrolling
    private int shiftY;
    private int shiftX;
 

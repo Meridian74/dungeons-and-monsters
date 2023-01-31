@@ -5,7 +5,7 @@
     "y": 0,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: top of 1x1 - '┌┐'"
   },
@@ -15,7 +15,7 @@
     "y": 0,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": false,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: external bottom-right corner - '┌─'"
   },
@@ -25,7 +25,7 @@
     "y": 0,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: bottom horizontal middle - 'ˉ'"
   },
@@ -35,7 +35,7 @@
     "y": 0,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: external bottom-left corner - '─┐'"
   },
@@ -45,7 +45,7 @@
     "y": 1,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: next down of 1x1 - '║'"
   },
@@ -55,7 +55,7 @@
     "y": 1,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: next down on the external bottom-right corner vertically - '|'"
   },
@@ -65,7 +65,7 @@
     "y": 1,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: next down on the external bottom-left corner vertically - '|'"
   },
@@ -75,7 +75,7 @@
     "y": 2,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: middle of 1x1 I. - '║"
   },
@@ -85,7 +85,7 @@
     "y": 2,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: right wall vertically I. - '|'"
   },
@@ -95,7 +95,7 @@
     "y": 2,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: left wall vertically I. - '|'"
   },
@@ -105,7 +105,7 @@
     "y": 3,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: middle of 1x1 II. - '║"
   },
@@ -115,7 +115,7 @@
     "y": 3,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: right wall vertically II. - '|'"
   },
@@ -125,7 +125,7 @@
     "y": 3,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: left wall vertically II. - '|'"
   },
@@ -135,7 +135,7 @@
     "y": 4,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: next up of 1x1 - '║'"
   },
@@ -145,7 +145,7 @@
     "y": 4,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: next up on the external top-right corner vertically - '|'"
   },
@@ -155,7 +155,7 @@
     "y": 4,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: next down on the external top-left corner vertically - '|'"
   },
@@ -165,7 +165,7 @@
     "y": 5,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: down of 1x1 - '└┘'"
   },
@@ -175,7 +175,7 @@
     "y": 5,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": false,
+    "solid": false,
     "shadeFactor": 1.0,
     "description": "Wall: inside top-right corner - '└─'"
   },
@@ -185,7 +185,7 @@
     "y": 5,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: top horizontal middle - '_'"
   },
@@ -195,7 +195,7 @@
     "y": 5,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: external top-left corner - '─┘'"
   },
@@ -205,7 +205,7 @@
     "y": 5,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: top horizontal middle with a hole in middle - '─'"
   },
@@ -215,7 +215,7 @@
     "y": 5,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: top horizontal middle with a hole at bottom - '─'"
   },
@@ -225,7 +225,7 @@
     "y": 6,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": false,
+    "solid": false,
     "shadeFactor": 0.0,
     "description": "Floor: plain"
   },
@@ -235,7 +235,7 @@
     "y": 6,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": false,
+    "solid": false,
     "shadeFactor": 0.0,
     "description": "Floor: with many cracks"
   },
@@ -245,7 +245,7 @@
     "y": 7,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": false,
+    "solid": false,
     "shadeFactor": 0.0,
     "description": "Floor: with less cracks I."
   },
@@ -255,7 +255,7 @@
     "y": 7,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": false,
+    "solid": false,
     "shadeFactor": 0.0,
     "description": "Floor: with less cracks II."
   },
@@ -265,7 +265,7 @@
     "y": 6,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": false,
+    "solid": false,
     "shadeFactor": 0.0,
     "description": "Floor: with dirty - bottom-right"
   },
@@ -275,7 +275,7 @@
     "y": 6,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": false,
+    "solid": false,
     "shadeFactor": 0.0,
     "description": "Floor: with dirty - bottom-left"
   },
@@ -285,7 +285,7 @@
     "y": 7,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": false,
+    "solid": false,
     "shadeFactor": 0.0,
     "description": "Floor: with dirty - top-right"
   },
@@ -295,7 +295,7 @@
     "y": 7,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": false,
+    "solid": false,
     "shadeFactor": 0.0,
     "description": "Floor: with dirty - bottom-left"
   },
@@ -305,7 +305,7 @@
     "y": 7,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: inner right side '|'"
   },
@@ -315,7 +315,7 @@
     "y": 7,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: inner left side '|'"
   },
@@ -325,7 +325,7 @@
     "y": 2,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: external bottom-right edge '┘'"
   },
@@ -335,7 +335,7 @@
     "y": 3,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: external bottom-left edge '└'"
   },
@@ -345,7 +345,7 @@
     "y": 1,
     "sizeX": 16,
     "sizeY": 16,
-    "collision": true,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: upper fog for horizontal middle wall"
   }

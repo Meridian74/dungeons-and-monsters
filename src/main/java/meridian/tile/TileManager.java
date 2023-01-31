@@ -35,7 +35,7 @@ public class TileManager {
          for (TileConfig tc : tileConfigs) {
             Tile tile = new Tile();
             tile.setId(tc.getId());
-            tile.setCollision(tc.isCollision());
+            tile.setSolid(tc.isSolid());
             tile.setDescription(tc.getDescription());
             tile.setTileTransparency(tc.getShadeFactor());
 

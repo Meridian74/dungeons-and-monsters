@@ -230,21 +230,18 @@ public class MapManager {
 
       // Calculate viewed opacity.
       shadeMatrix.updateMapCellsVisibility(this.cells, player);
-
    }
 
    private float calculateDistance(Player player, int row, int col) {
       int playerX = player.getWorldCol();
       int playerY = player.getWorldRow();
-      // C^2 = A^2 + B^2 ... Pythagorean theorem.
       double value = 0.0 + (playerX - col) * (playerX - col) + (playerY - row) * (playerY - row);
       return (float) Math.sqrt(value);
-
    }
 
    private float calculateOpacityFactor(Player player, float distance) {
       int sight = player.getLightCircle();
-      float result = (distance * -0.1428f) + 1.0f + sight * 0.1428f;
+      float result = (distance * -0.4f) + 1.0f + sight * 0.4f;
       if (result < 0.0f) {
          result = 0.0f;
       }

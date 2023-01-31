@@ -24,7 +24,7 @@ public class Tile {
    private BufferedImage image;
 
    // walkable (false: yes, true: block walking - def: walkable
-   private boolean collision = false;
+   private boolean solid = false;
 
    /* factor affecting the visibility of the neighboring field in a percentage
     * way from the direction of the field of view
