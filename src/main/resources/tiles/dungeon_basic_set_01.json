@@ -175,7 +175,7 @@
     "y": 5,
     "sizeX": 16,
     "sizeY": 16,
-    "solid": false,
+    "solid": true,
     "shadeFactor": 1.0,
     "description": "Wall: inside top-right corner - '└─'"
   },
