@@ -8,6 +8,7 @@ import meridian.entity.Player;
 import meridian.map.CollisionChecker;
 import meridian.map.MapManager;
 import meridian.map.ShadeMatrix;
+import meridian.sound.SoundManager;
 import meridian.tile.TileManager;
 
 import javax.swing.JPanel;
@@ -32,6 +33,9 @@ public class GamePanel extends JPanel implements Runnable {
    // Collision handler.
    private CollisionChecker collisionChecker = new CollisionChecker(this.mapManager);
 
+   // Sounds
+   private SoundManager soundManager = new SoundManager();
+
    // Add a Player.
    private Player player = new Player(keyHandler, this.collisionChecker);
 
@@ -55,6 +59,10 @@ public class GamePanel extends JPanel implements Runnable {
       this.player.setWorldRow(3);
       this.player.setShiftX(0);
       this.player.setShiftY(0);
+
+      this.soundManager.setPlayOfSoundFileByKeyname("start");
+      this.soundManager.play();
+
 
    }
 
