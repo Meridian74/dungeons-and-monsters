@@ -60,9 +60,9 @@ public class GamePanel extends JPanel implements Runnable {
       this.player.setShiftX(0);
       this.player.setShiftY(0);
 
+      // play start songs
       this.soundManager.setPlayOfSoundFileByKeyname("start");
       this.soundManager.play();
-
 
    }
 

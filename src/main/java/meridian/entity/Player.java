@@ -295,18 +295,16 @@ public class Player extends Entity {
       // Update Y coord
       int shift = getShiftY();
 
-      // change position downer
-      if (shift <= -GameParam.TILE_SIZE) {
-         setShiftY(shift + GameParam.TILE_SIZE);
+      // Change next position if player reached half of next tile.
+      if (shift <= -(GameParam.TILE_SIZE / 2)) {
+         setShiftY(shift + (GameParam.TILE_SIZE));
          int position = getWorldRow();
-         position++;
-         setWorldRow(position);
+         setWorldRow(++position);
       }
-      else if (shift >= GameParam.TILE_SIZE) {
-         setShiftY(shift - GameParam.TILE_SIZE);
+      else if (shift >= (GameParam.TILE_SIZE / 2)) {
+         setShiftY(shift - (GameParam.TILE_SIZE));
          int position = getWorldRow();
-         position--;
-         setWorldRow(position);
+         setWorldRow(--position);
       }
 
    }
@@ -315,18 +313,16 @@ public class Player extends Entity {
       // Update Y coord
       int shift = getShiftX();
 
-      // change position downer
-      if (shift <= -GameParam.TILE_SIZE) {
+      // Change next position if player reached half of next tile.
+      if (shift <= -(GameParam.TILE_SIZE / 2)) {
          setShiftX(shift + GameParam.TILE_SIZE);
          int position = getWorldCol();
-         position++;
-         setWorldCol(position);
+         setWorldCol(++position);
       }
-      else if (shift >= GameParam.TILE_SIZE) {
-         setShiftX(shift - GameParam.TILE_SIZE);
+      else if (shift >= (GameParam.TILE_SIZE / 2)) {
+         setShiftX(shift - (GameParam.TILE_SIZE));
          int position = getWorldCol();
-         position--;
-         setWorldCol(position);
+         setWorldCol(--position);
       }
 
    }

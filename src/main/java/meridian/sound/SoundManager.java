@@ -13,7 +13,6 @@ import java.util.Map;
 public class SoundManager {
 
    Clip clip;
-
    Map<String, URL> soundUrls;
 
    public SoundManager() {
